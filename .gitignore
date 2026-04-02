@@ -1,0 +1,9 @@
+__pycache__/
+.pytest_cache/
+reports/
+*.log
+.env
+node_modules/
+test-results/
+playwright-report/
+blob-report/
