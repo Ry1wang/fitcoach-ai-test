@@ -1,0 +1,604 @@
+[
+  {
+    "id": "adv-001",
+    "query": "I'm following a Starting Strength linear progression and have developed elbow tendonitis from low-bar squats. Should I adjust my grip width or my elbow position first, and are there any nutritional strategies to support tendon recovery while I continue to train?",
+    "category": "cross_domain",
+    "answerability": "answerable",
+    "expected_agents": [
+      "training",
+      "rehab",
+      "nutrition"
+    ],
+    "created_at": "2026-04-02T06:46:40.184341+00:00",
+    "notes": "Spans training (Starting Strength programming), rehab (elbow tendonitis from squat form), and nutrition (tendon recovery). Tests router's ability to handle a multi-faceted real-world problem from a cross-domain book."
+  },
+  {
+    "id": "adv-002",
+    "query": "In the context of a peaking block for a powerlifting meet, how should I manage intra-workout carbohydrate intake, and what are the signs that my lower back fatigue is technical versus a potential injury that needs prehab work like the McGill Big 3?",
+    "category": "cross_domain",
+    "answerability": "answerable",
+    "expected_agents": [
+      "training",
+      "nutrition",
+      "rehab"
+    ],
+    "created_at": "2026-04-02T06:46:40.184341+00:00",
+    "notes": "Spans training (peaking block programming), nutrition (intra-workout carbs), and rehab (differentiating fatigue from injury, prehab exercises). Tests boundary between performance nutrition and injury prevention."
+  },
+  {
+    "id": "adv-003",
+    "query": "My copy of 'The Barbell Prescription' discusses training for older athletes with pre-existing shoulder osteoarthritis. It recommends certain press variations. What modifications to the bench press setup from 'Becoming a Supple Leopard' would be most appropriate, and should my protein intake be higher than standard recommendations to combat sarcopenia?",
+    "category": "cross_domain",
+    "answerability": "answerable",
+    "expected_agents": [
+      "training",
+      "rehab",
+      "nutrition"
+    ],
+    "created_at": "2026-04-02T06:46:40.184341+00:00",
+    "notes": "Explicitly references a cross-domain book (Barbell Prescription spans training & rehab for population) and another rehab source. Spans training modifications, rehab setup, and population-specific nutrition."
+  },
+  {
+    "id": "adv-004",
+    "query": "I'm a powerlifter with a history of patellar tendinopathy. During a heavy squat cycle, my knee pain has returned. Should I reduce volume, switch to tempo squats, or deload entirely? Furthermore, does collagen supplementation before training have evidence for in-season tendon health in strength athletes?",
+    "category": "cross_domain",
+    "answerability": "answerable",
+    "expected_agents": [
+      "training",
+      "rehab",
+      "nutrition"
+    ],
+    "created_at": "2026-04-02T06:46:40.184341+00:00",
+    "notes": "Spans training decisions (volume, exercise selection, deload) for a lifter with a known rehab condition (patellar tendinopathy) and asks about a specific nutritional supplement for tendon health."
+  },
+  {
+    "id": "adv-005",
+    "query": "Reading about conjugate method, I see it uses varied exercises to avoid overuse. If I'm managing a mild pec strain from benching, which variations (e.g., floor press, close-grip) would be safest to maintain pressing volume, and what should my daily vitamin C and zinc intake look like to optimize soft tissue repair?",
+    "category": "cross_domain",
+    "answerability": "answerable",
+    "expected_agents": [
+      "training",
+      "rehab",
+      "nutrition"
+    ],
+    "created_at": "2026-04-02T06:46:40.184341+00:00",
+    "notes": "Spans training theory (conjugate method), rehab-informed exercise selection (managing pec strain), and specific micronutrient recommendations for recovery."
+  },
+  {
+    "id": "adv-006",
+    "query": "For a weight-class athlete in a water-loading and sodium manipulation protocol before competition, how should training intensity and range of motion be adjusted in the final 72 hours to minimize injury risk when joints may be less lubricated, and what are the key electrolytes to prioritize in the final meal before weigh-in?",
+    "category": "cross_domain",
+    "answerability": "answerable",
+    "expected_agents": [
+      "training",
+      "rehab",
+      "nutrition"
+    ],
+    "created_at": "2026-04-02T06:46:40.184341+00:00",
+    "notes": "Spans nutrition (water/sodium manipulation, electrolytes), training adjustments (intensity/ROM), and rehab rationale (injury risk due to dehydration). A complex, integrated peak-week scenario."
+  },
+  {
+    "id": "adv-007",
+    "query": "My powerlifting program has me doing high-frequency squatting. I've developed hip impingement symptoms. Do I need to work on my ankle mobility per Starrett, adjust my stance width, or both? Also, given the increased inflammation from impingement, should I increase my omega-3 intake or are there more targeted anti-inflammatory nutrition strategies?",
+    "category": "cross_domain",
+    "answerability": "answerable",
+    "expected_agents": [
+      "training",
+      "rehab",
+      "nutrition"
+    ],
+    "created_at": "2026-04-02T06:46:40.184341+00:00",
+    "notes": "Spans training variable (stance width), rehab (mobility assessment referencing Starrett, hip impingement), and nutrition (managing inflammation). Directly references a rehab book author."
+  },
+  {
+    "id": "adv-008",
+    "query": "When implementing the RPE-based autoregulation from 'Scientific Principles of Strength Training' for a lifter returning from a lumbar disc injury, what are the red-flag RPE ratings that should trigger an exercise substitution, and how does daily protein distribution (e.g., 4x vs. 6x meals) impact muscle protein synthesis in a calorically restricted rehab phase?",
+    "category": "cross_domain",
+    "answerability": "answerable",
+    "expected_agents": [
+      "training",
+      "rehab",
+      "nutrition"
+    ],
+    "created_at": "2026-04-02T06:46:40.184341+00:00",
+    "notes": "Spans training theory (RPE, autoregulation), rehab (post-injury red flags, exercise substitution), and nuanced nutrition (protein timing in a deficit). References a specific training book."
+  },
+  {
+    "id": "adv-009",
+    "query": "I'm using the block periodization model from Zatsiorsky. In the accumulation phase with high volume, my old rotator cuff tendinopathy is flaring up. Should I use drop sets, reduce exercise variety, or implement daily band pull-aparts? What role does hydration status play in tendon load tolerance during high-volume phases?",
+    "category": "cross_domain",
+    "answerability": "answerable",
+    "expected_agents": [
+      "training",
+      "rehab",
+      "nutrition"
+    ],
+    "created_at": "2026-04-02T06:46:40.184341+00:00",
+    "notes": "Spans training periodization (Zatsiorsky), rehab (managing rotator cuff tendinopathy with prehab), and nutrition (hydration's role in tissue tolerance). References a specific training book author."
+  },
+  {
+    "id": "adv-010",
+    "query": "As a masters athlete, my recovery is slower. My program includes heavy deadlifts and I have persistent forearm extensor tightness. Is this a technique issue (e.g., grip), a volume issue requiring program modulation, or a mobility issue addressable with wrist CARs? Would increasing magnesium intake post-training aid with the muscle tightness and cramping?",
+    "category": "cross_domain",
+    "answerability": "answerable",
+    "expected_agents": [
+      "training",
+      "rehab",
+      "nutrition"
+    ],
+    "created_at": "2026-04-02T06:46:40.184341+00:00",
+    "notes": "Spans training (technique, programming for masters), rehab (forearm tightness, wrist mobility drills), and nutrition (magnesium for muscle tightness). Tests integration for a specific population."
+  },
+  {
+    "id": "adv-011",
+    "query": "I'm reading a book by a powerlifting coach who says to eat a ton of carbs before a meet, but my knees are shot from years of squatting. How should I fuel for my next competition without making the inflammation worse?",
+    "category": "ambiguous",
+    "answerability": "answerable",
+    "expected_agents": [
+      "nutrition",
+      "rehab",
+      "training"
+    ],
+    "created_at": "2026-04-02T06:46:40.184341+00:00",
+    "notes": "Cross-domain book scenario (powerlifting covers training & nutrition). Query mixes nutrition advice with rehab concern (inflammation) and training context (competition). Router must decide primary agent."
+  },
+  {
+    "id": "adv-012",
+    "query": "What's the best way to structure my week?",
+    "category": "ambiguous",
+    "answerability": "answerable",
+    "expected_agents": [
+      "training"
+    ],
+    "created_at": "2026-04-02T06:46:40.184341+00:00",
+    "notes": "Extremely vague intent. 'Structure my week' could refer to training programming, meal timing, or rehab exercises. Router must infer likely domain from common phrasing in fitness books."
+  },
+  {
+    "id": "adv-013",
+    "query": "I feel weak and tired all the time. My joints ache. I don't know if I'm eating wrong, training wrong, or just broken. Where do I even begin?",
+    "category": "emotional",
+    "answerability": "answerable",
+    "expected_agents": [
+      "nutrition",
+      "rehab",
+      "training"
+    ],
+    "created_at": "2026-04-02T06:46:40.184341+00:00",
+    "notes": "High-stress, desperate framing with symptoms spanning all three domains (fatigue-nutrition, joint pain-rehab, weakness-training). Tests if emotional language disrupts routing logic."
+  },
+  {
+    "id": "adv-014",
+    "query": "In 'Becoming a Supple Leopard', Kelly Starrett talks about thoracic spine mobility for the overhead position. How does this apply to the bench press setup described in 'Starting Strength', and should I be doing specific mobility work on bench days?",
+    "category": "ambiguous",
+    "answerability": "answerable",
+    "expected_agents": [
+      "rehab",
+      "training"
+    ],
+    "created_at": "2026-04-02T06:46:40.184341+00:00",
+    "notes": "Explicitly references two authors from different domains (Starrett-rehab, Rippetoe-training). Asks for a cross-application, creating ambiguity between rehab/mobility and training technique."
+  },
+  {
+    "id": "adv-015",
+    "query": "My doctor said I have tendonitis. I'm following the rehab protocols from 'Rebuilding Milo', but I'm also in a strength block from a Zatsiorsky-inspired program. How do I adjust volume and intensity to not lose progress but also heal?",
+    "category": "ambiguous",
+    "answerability": "answerable",
+    "expected_agents": [
+      "rehab",
+      "training"
+    ],
+    "created_at": "2026-04-02T06:46:40.184341+00:00",
+    "notes": "Directly cites two domain-specific books (Horschig-rehab, Zatsiorsky-training). Asks for integration of rehab principles into a periodized training plan, a core router boundary case."
+  },
+  {
+    "id": "adv-016",
+    "query": "I want to get bigger and stronger, but I keep getting hurt. Every time I push the weight up, something gives out. I'm scared to lift heavy now. What should I do?",
+    "category": "emotional",
+    "answerability": "answerable",
+    "expected_agents": [
+      "training",
+      "rehab"
+    ],
+    "created_at": "2026-04-02T06:46:40.184341+00:00",
+    "notes": "Emotional query (fear, frustration) combining training goals (bigger, stronger) with recurring rehab issues. Tests if emotional content is correctly parsed to route to both training and rehab."
+  },
+  {
+    "id": "adv-017",
+    "query": "For an intermediate lifter with no injuries, what does the research say about protein timing around workouts versus total daily intake for maximizing hypertrophy?",
+    "category": "ambiguous",
+    "answerability": "answerable",
+    "expected_agents": [
+      "nutrition"
+    ],
+    "created_at": "2026-04-02T06:46:40.184341+00:00",
+    "notes": "Vague intent via 'what does the research say'. While clearly nutrition, phrasing could be interpreted as a request for scientific review, which may appear in training or nutrition texts. Tests specificity of routing."
+  },
+  {
+    "id": "adv-018",
+    "query": "I'm doing a powerlifting program that has me squatting heavy three times a week. My hips are always tight. Should I add more stretching, change my technique, or deload? Or is it a recovery issue?",
+    "category": "ambiguous",
+    "answerability": "answerable",
+    "expected_agents": [
+      "rehab",
+      "training"
+    ],
+    "created_at": "2026-04-02T06:46:40.184341+00:00",
+    "notes": "Scenario from a cross-domain powerlifting context. Presents multiple potential solutions spanning rehab (stretching, technique), training (deload), and potentially nutrition (recovery). Router must prioritize."
+  },
+  {
+    "id": "adv-019",
+    "query": "What's the difference between a strain and a sprain, and when should I see a doctor versus just applying the RICE method?",
+    "category": "ambiguous",
+    "answerability": "answerable",
+    "expected_agents": [
+      "rehab"
+    ],
+    "created_at": "2026-04-02T06:46:40.184341+00:00",
+    "notes": "Vague intent that sits at the boundary of general medical advice and specific rehab knowledge. While rehab-focused, the query's general nature tests if the router incorrectly flags it as out-of-corpus."
+  },
+  {
+    "id": "adv-020",
+    "query": "I'm prepping for a meet and my weight class is 83kg. I'm sitting at 85kg. How should I manipulate water and carbs in the last 48 hours to make weight without feeling like garbage for my lifts, especially since I have a history of cramping?",
+    "category": "ambiguous",
+    "answerability": "answerable",
+    "expected_agents": [
+      "nutrition",
+      "training"
+    ],
+    "created_at": "2026-04-02T06:46:40.184341+00:00",
+    "notes": "Cross-domain competition scenario. Primarily a nutrition/weight-cut question, but includes performance outcome ('feeling like garbage for lifts') and a medical-ish note ('history of cramping'), creating ambiguity with training and rehab domains."
+  },
+  {
+    "id": "adv-021",
+    "query": "I'm a competitive powerlifter and my coach says I need to 'peak' for a meet in 8 weeks. Can you give me a detailed peaking program based on the principles in Zatsiorsky's book, and should I increase my creatine dosage during this phase?",
+    "category": "cross_domain",
+    "answerability": "answerable",
+    "expected_agents": [
+      "training",
+      "nutrition"
+    ],
+    "created_at": "2026-04-02T06:46:40.184341+00:00",
+    "notes": "Spans training (peaking programming from Zatsiorsky) and nutrition (creatine timing). Tests router's ability to handle a multi-part query from a cross-domain powerlifting context."
+  },
+  {
+    "id": "adv-022",
+    "query": "My doctor diagnosed me with patellar tendinopathy. The pain is worse when I sit for long periods. What mobility drills from 'Becoming a Supple Leopard' should I do, and what lower-body exercises can I safely perform in the gym without making it worse?",
+    "category": "cross_domain",
+    "answerability": "answerable",
+    "expected_agents": [
+      "rehab",
+      "training"
+    ],
+    "created_at": "2026-04-02T06:46:40.184341+00:00",
+    "notes": "Spans rehab (mobility for a specific condition from Starrett) and training (safe exercise modification). Tests router on a clear rehab-led query with training implications."
+  },
+  {
+    "id": "adv-023",
+    "query": "I feel lost.",
+    "category": "ambiguous",
+    "answerability": "unanswerable",
+    "expected_agents": [],
+    "created_at": "2026-04-02T06:46:40.184341+00:00",
+    "notes": "Extremely vague intent with no domain-specific details. Tests system's ability to recognize and decline unactionable queries."
+  },
+  {
+    "id": "adv-024",
+    "query": "What's the best way to structure my weekly workouts for hypertrophy while managing a shoulder impingement I'm rehabbing with exercises from 'Rebuilding Milo'?",
+    "category": "cross_domain",
+    "answerability": "answerable",
+    "expected_agents": [
+      "training",
+      "rehab"
+    ],
+    "created_at": "2026-04-02T06:46:40.184341+00:00",
+    "notes": "Spans training (hypertrophy programming) and rehab (specific rehab protocol from Horschig). A classic real-world boundary case."
+  },
+  {
+    "id": "adv-025",
+    "query": "I'm terrified. I tried a new deadlift cue from a YouTube video and now my lower back is in sharp, shooting pain every time I bend over. I have a competition in a month. What do I do?",
+    "category": "emotional",
+    "answerability": "answerable",
+    "expected_agents": [
+      "rehab"
+    ],
+    "created_at": "2026-04-02T06:46:40.184341+00:00",
+    "notes": "High-stress, urgent framing around a potential acute injury from training. Tests system's composure and ability to route to rehab despite emotional language."
+  },
+  {
+    "id": "adv-026",
+    "query": "Can you explain the biomechanics of the snatch and provide a 12-week Olympic weightlifting program for an intermediate athlete?",
+    "category": "out_of_corpus",
+    "answerability": "unanswerable",
+    "expected_agents": [],
+    "created_at": "2026-04-02T06:46:40.184341+00:00",
+    "notes": "Topic (Olympic weightlifting) is not covered in the specified corpus (focused on strength training, rehab, nutrition). Must be recognized as unanswerable."
+  },
+  {
+    "id": "adv-027",
+    "query": "What are the best exercises for building a bigger chest and shoulders, and what supplements should I take to accelerate muscle growth? Also, how do I improve my ankle mobility for a deeper squat?",
+    "category": "long_multipart",
+    "answerability": "answerable",
+    "expected_agents": [
+      "training",
+      "nutrition",
+      "rehab"
+    ],
+    "created_at": "2026-04-02T06:46:40.184341+00:00",
+    "notes": "Long query with three clear sub-questions spanning all three agent domains. Tests the router's ability to parse and delegate complex, multi-faceted requests."
+  },
+  {
+    "id": "adv-028",
+    "query": "My friend swears by the keto diet for endurance athletes, citing Dr. Tim Noakes. What does the sports nutrition textbook say about ketogenic diets for athletic performance?",
+    "category": "author_reference",
+    "answerability": "answerable",
+    "expected_agents": [
+      "nutrition"
+    ],
+    "created_at": "2026-04-02T06:46:40.184341+00:00",
+    "notes": "References an author (Noakes) not in the corpus, but the core query is answerable from the sports nutrition textbook. Tests system's focus on corpus content over namedropping."
+  },
+  {
+    "id": "adv-029",
+    "query": "I'm desperate and crying every day. I've been dieting for 6 months and tracking every calorie, but my scale hasn't moved. I feel like a failure and my joints hurt from all the cardio. Is there any hope for me?",
+    "category": "emotional",
+    "answerability": "answerable",
+    "expected_agents": [
+      "nutrition",
+      "rehab"
+    ],
+    "created_at": "2026-04-02T06:46:40.184341+00:00",
+    "notes": "Highly emotional query describing weight loss plateau and joint pain. Spans nutrition (diet) and rehab (joint pain from cardio). Tests empathy and multi-domain routing under distress."
+  },
+  {
+    "id": "adv-030",
+    "query": "How do I train for a marathon while following the nutritional guidelines in 'The Paleo Diet for Athletes'?",
+    "category": "out_of_corpus",
+    "answerability": "unanswerable",
+    "expected_agents": [],
+    "created_at": "2026-04-02T06:46:40.184341+00:00",
+    "notes": "Topic (marathon training) and specific referenced book are outside the defined corpus. Must be recognized as unanswerable."
+  },
+  {
+    "id": "adv-031",
+    "query": "I've been reading Rippetoe's book and he emphasizes the low-bar squat. 但是，我膝盖有旧伤，每次深蹲后都疼。Should I switch to high-bar or just stop squatting? 你能推荐一些替代动作吗？",
+    "category": "mixed_language",
+    "answerability": "answerable",
+    "expected_agents": [
+      "training",
+      "rehab"
+    ],
+    "created_at": "2026-04-02T06:46:40.184341+00:00",
+    "notes": "Targets router with mixed language and cross-domain intent (training technique from Rippetoe + rehab for knee pain)."
+  },
+  {
+    "id": "adv-032",
+    "query": "According to Zatsiorsky's periodization theories, how should I structure my mesocycles for a peaking phase, and what specific nutritional strategies (like carb loading) from a sports nutrition textbook would best support that phase?",
+    "category": "author_reference",
+    "answerability": "answerable",
+    "expected_agents": [
+      "training",
+      "nutrition"
+    ],
+    "created_at": "2026-04-02T06:46:40.184341+00:00",
+    "notes": "Explicitly references two in-corpus authors/domains (Zatsiorsky + sports nutrition textbook), testing router's ability to handle a complex, multi-agent query."
+  },
+  {
+    "id": "adv-033",
+    "query": "Starrett 在 'Becoming a Supple Leopard' 里提到的 '关节囊复位' 具体怎么做？My shoulder clicks during bench press. 这个技术能帮到我吗？还是我需要看医生？",
+    "category": "mixed_language",
+    "answerability": "answerable",
+    "expected_agents": [
+      "rehab"
+    ],
+    "created_at": "2026-04-02T06:46:40.184341+00:00",
+    "notes": "Mixed language query referencing a specific technique from Starrett (in-corpus) combined with a training context, testing precise retrieval and language handling."
+  },
+  {
+    "id": "adv-034",
+    "query": "I'm designing a program for a masters athlete with a history of lower back strain. Using principles from 'Rebuilding Milo' for prehab and 'Starting Strength' for progression, what would a safe first month look like? Focus on squat and deadlift form cues.",
+    "category": "author_reference",
+    "answerability": "answerable",
+    "expected_agents": [
+      "training",
+      "rehab"
+    ],
+    "created_at": "2026-04-02T06:46:40.184341+00:00",
+    "notes": "Explicitly references two in-corpus rehab/training books, creating a clear cross-domain programming scenario."
+  },
+  {
+    "id": "adv-035",
+    "query": "What's the best way to optimize my macros for muscle gain while following a vegan diet? I also have IBS, so need low-FODMAP options.",
+    "category": "out_of_corpus",
+    "answerability": "unanswerable",
+    "expected_agents": [],
+    "created_at": "2026-04-02T06:46:40.184341+00:00",
+    "notes": "Topic (vegan sports nutrition + IBS/low-FODMAP) is not covered in the specified corpus (general sports nutrition textbook). Must be flagged as unanswerable."
+  },
+  {
+    "id": "adv-036",
+    "query": "Dr. Horschig 在 'Rebuilding Milo' 中对髌股疼痛综合征的康复，和传统物理疗法有什么主要区别？他的方法更强调什么？请用中文解释关键点。",
+    "category": "author_reference",
+    "answerability": "answerable",
+    "expected_agents": [
+      "rehab"
+    ],
+    "created_at": "2026-04-02T06:46:40.184341+00:00",
+    "notes": "Chinese-dominant query referencing an in-corpus author (Horschig) and book, testing non-English retrieval and comprehension."
+  },
+  {
+    "id": "adv-037",
+    "query": "My friend says I should 'eat like a lion' based on some paleo book, but my sports nutrition textbook emphasizes carb timing. 谁是对的？For my 5am training sessions, what should I eat?",
+    "category": "mixed_language",
+    "answerability": "answerable",
+    "expected_agents": [
+      "nutrition"
+    ],
+    "created_at": "2026-04-02T06:46:40.184341+00:00",
+    "notes": "Mixed language query contrasting an out-of-corpus diet (paleo/'eat like a lion') with the in-corpus textbook. Router must identify the answerable part (textbook advice for early training)."
+  },
+  {
+    "id": "adv-038",
+    "query": "Rippetoe 和 Zatsiorsky 在关于 novice lifter 的 weekly progression 观点上有什么不同？谁的模型更适合一个以前受伤过、现在要重回训练的人？",
+    "category": "author_reference",
+    "answerability": "answerable",
+    "expected_agents": [
+      "training",
+      "rehab"
+    ],
+    "created_at": "2026-04-02T06:46:40.184341+00:00",
+    "notes": "Directly compares two in-corpus training authors, then adds a rehab-related conditional ('以前受伤过'), creating a nuanced cross-domain comparison query."
+  },
+  {
+    "id": "adv-039",
+    "query": "I'm trying to fix my 'butt wink' at the bottom of the squat. Starrett's book talks about hip capsule mobility, but I don't understand the exercises. Can you explain the 'couch stretch' and how it helps? 另外，如果我的脚踝活动度也很差，应该先解决哪个？",
+    "category": "mixed_language",
+    "answerability": "answerable",
+    "expected_agents": [
+      "rehab"
+    ],
+    "created_at": "2026-04-02T06:46:40.184341+00:00",
+    "notes": "Mixed language query focused on a specific rehab technique from Starrett, with a follow-up question about prioritization, testing detailed retrieval and reasoning."
+  },
+  {
+    "id": "adv-040",
+    "query": "Looking at the nutrition guidelines in a standard sports nutrition textbook and the fatigue management principles in Zatsiorsky, how should I adjust my calorie and protein intake during a planned overreaching phase versus a tapering phase?",
+    "category": "author_reference",
+    "answerability": "answerable",
+    "expected_agents": [
+      "nutrition",
+      "training"
+    ],
+    "created_at": "2026-04-02T06:46:40.184341+00:00",
+    "notes": "Explicitly references the in-corpus sports nutrition textbook and Zatsiorsky, demanding an integrated answer from nutrition and training agents on periodized nutrition."
+  },
+  {
+    "id": "adv-041",
+    "query": "I'm currently following a Starting Strength linear progression, but I've hit a plateau on my squat at 315 lbs for 3 sets of 5. My form feels off, and my lower back is getting sore. I'm also trying to cut weight for a powerlifting meet in 12 weeks, so my nutrition is tight. Can you analyze this multi-faceted situation? First, what are the common technical errors in the low-bar back squat that lead to lower back fatigue, and what are the best cue-based corrections per Rippetoe? Second, for a lifter at my stage, what are the recommended programming tweaks from the principles in *Science and Practice of Strength Training* to break through a squat plateau while managing fatigue? Third, given the caloric deficit, what specific nutritional timing or macro adjustments from a sports nutrition textbook would help preserve strength and aid recovery?",
+    "category": "long_multipart",
+    "answerability": "answerable",
+    "expected_agents": [
+      "training",
+      "rehab",
+      "nutrition"
+    ],
+    "created_at": "2026-04-02T06:46:40.184341+00:00",
+    "notes": "Failure mode targeted: Long, complex query explicitly spanning all three domains with specific sub-questions referencing known authors. Tests the router's ability to decompose and assign multiple agents, and each agent's ability to retrieve specific, book-based information."
+  },
+  {
+    "id": "adv-042",
+    "query": "我最近深蹲时膝盖内侧疼痛，doctor说是pes anserine bursitis。I want to continue training my upper body and maintain muscle mass while this heals. 根据《Rebuilding Milo》和《Becoming a Supple Leopard》，对于这种滑囊炎，有哪些具体的康复阶段和动作推荐？另外，在不能做下肢训练的情况下，如何根据Zatsiorsky的书中原则调整我的上肢训练计划来维持神经适应性？最后，my protein intake is 1.6g/kg bodyweight，对于修复这种炎症和组织，从运动营养学教材看，是否需要增加某些特定营养素或调整比例？",
+    "category": "mixed_language",
+    "answerability": "answerable",
+    "expected_agents": [
+      "rehab",
+      "training",
+      "nutrition"
+    ],
+    "created_at": "2026-04-02T06:46:40.184341+00:00",
+    "notes": "Failure mode targeted: Mixed Chinese/English query with a specific medical condition, referencing two rehab books, a training book author, and requesting nutrition textbook advice. Tests language-agnostic routing and the ability to handle precise, multi-domain sub-questions within a single query."
+  },
+  {
+    "id": "adv-043",
+    "query": "As a masters athlete (52 years old) returning to powerlifting after a decade off, I'm designing a yearly plan. I need a periodization model that accommodates slower recovery. I also have a history of mild shoulder impingement that flares up with high volume bench press. Furthermore, my bloodwork shows slightly elevated triglycerides, so I'm mindful of dietary fats. Construct a comprehensive overview addressing: 1) An annual periodization structure for a masters athlete, drawing from Zatsiorsky's concepts of stimulus-fatigue-recovery, 2) Bench press variations and technical modifications from rehab literature to manage shoulder impingement risk, and 3) General sports nutrition guidelines for optimizing lipid profiles while supporting strength training in an older population.",
+    "category": "long_multipart",
+    "answerability": "answerable",
+    "expected_agents": [
+      "training",
+      "rehab",
+      "nutrition"
+    ],
+    "created_at": "2026-04-02T06:46:40.184341+00:00",
+    "notes": "Failure mode targeted: Extremely long, integrative query for a specific population (masters athlete) combining periodization theory, injury prevention, and nutrition. Tests the system's ability to synthesize principles from different domains to address a complex, real-world scenario."
+  },
+  {
+    "id": "adv-044",
+    "query": "Looking at my training log, my deadlift is stalling while my squat progresses. I feel my setup is inconsistent and my hamstrings are always tight. I've read Starrett's stuff on hip hinge but need more. Also, I'm on a vegan diet for ethical reasons and worry about creatine and protein synthesis. Please provide a detailed, step-by-step analysis: First, break down the deadlift technique flaws that cause hamstring dominance and back rounding, referencing common cues and corrections. Second, prescribe a daily mobility routine from supple leopard principles targeting the posterior chain. Third, evaluate the scientific consensus from a sports nutrition textbook on the efficacy and necessity of vegan-friendly creatine supplementation for strength athletes, and suggest optimal protein pairing strategies.",
+    "category": "long_multipart",
+    "answerability": "answerable",
+    "expected_agents": [
+      "training",
+      "rehab",
+      "nutrition"
+    ],
+    "created_at": "2026-04-02T06:46:40.184341+00:00",
+    "notes": "Failure mode targeted: Long query linking a specific technical failure (deadlift stall) to mobility and diet. Tests if the router can separate the rehab (mobility routine) and nutrition (vegan supplementation) components from the core training question, and if agents can retrieve specific, actionable advice from their respective books."
+  },
+  {
+    "id": "adv-045",
+    "query": "我进行力量举训练，但我的手腕在卧推时疼痛。I think it's a mobility issue. 同时，我想增加我的体重来提升力量级别，but I don't want to gain too much fat. 请给我一个综合计划：根据《Becoming a Supple Leopard》，有哪些针对手腕和胸椎的灵活性练习可以整合到热身中？根据Rippetoe或Zatsiorsky，在增重期间，如何调整训练量和强度来最大化力量增益而非单纯肌肉肥大？最后，根据运动营养学，在增肌期，每日卡路里盈余、蛋白质和碳水化合物的具体分配策略是什么？",
+    "category": "mixed_language",
+    "answerability": "answerable",
+    "expected_agents": [
+      "rehab",
+      "training",
+      "nutrition"
+    ],
+    "created_at": "2026-04-02T06:46:40.184341+00:00",
+    "notes": "Failure mode targeted: Mixed language query with clear sub-questions directed at specific books/authors across three domains. Tests the router's precision in assigning each sub-question to the correct agent despite the language mix and the agents' ability to cite their designated sources."
+  },
+  {
+    "id": "adv-046",
+    "query": "I'm preparing for a strongman competition which involves odd objects and extreme conditioning. My current block focuses on maximal strength, but I need to integrate event-specific skill work without overtraining. I also have a nagging elbow tendonitis from log cleans. Furthermore, the events are long, so I need a nutrition strategy for intra-event fueling. Develop a weekly template that: 1) Balances maximal strength work (inspired by Zatsiorsky's intensity zones) with event skill practice, considering fatigue management, 2) Incorporates prehab and rehab exercises from Horschig's or Starrett's methodologies for managing elbow tendonitis during pressing movements, and 3) Outlines a competition day nutrition plan, including pre-event meal composition and intra-event hydration/fueling recommendations from sports nutrition science.",
+    "category": "long_multipart",
+    "answerability": "answerable",
+    "expected_agents": [
+      "training",
+      "rehab",
+      "nutrition"
+    ],
+    "created_at": "2026-04-02T06:46:40.184341+00:00",
+    "notes": "Failure mode targeted: Long, highly specific query for a niche sport (strongman), requiring integration of specialized programming, injury management for a specific issue, and competition nutrition. Tests the depth of retrieval from the corpus for applied, cross-domain problem-solving."
+  },
+  {
+    "id": "adv-047",
+    "query": "After a marathon, I want to transition back to strength training safely. My quads are extremely sore, and I have a slight IT band tightness. I also need to adjust my diet from high-carb fueling to a maintenance phase. Provide a phased approach: Phase 1 (Week 1-2): What are the recommended rehab and mobility protocols from *Rebuilding Milo* or similar for addressing post-marathon muscle soreness and IT band issues? Phase 2 (Week 3-4): How should I reintroduce barbell training (squat, deadlift) using regressions and progressive overload principles from foundational strength texts? Phase 3 (Nutrition): What is the textbook-guided process for reversing out of a carbohydrate-loading diet, adjusting macronutrients to support muscle repair and strength development without unnecessary weight gain?",
+    "category": "long_multipart",
+    "answerability": "answerable",
+    "expected_agents": [
+      "rehab",
+      "training",
+      "nutrition"
+    ],
+    "created_at": "2026-04-02T06:46:40.184341+00:00",
+    "notes": "Failure mode targeted: Long query structured as a temporal phased plan, explicitly assigning phases to different domains. Tests the router's ability to handle structured multi-part requests and the agents' ability to provide sequential, phase-appropriate guidance from their books."
+  },
+  {
+    "id": "adv-048",
+    "query": "作为一个篮球运动员，我在赛季中需要同时保持爆发力、敏捷性和避免伤病。我的脚踝有过旧伤。另外，密集的赛程让我很难管理体重和能量。请给出一个整合方案：第一，根据力量训练科学，在赛季中如何安排力量训练（频率、强度、动作选择）来维持力量而不影响场上表现？第二，根据康复知识，有哪些基于《Becoming a Supple Leopard》的日常脚踝稳定性和机动性练习？第三，根据运动营养学教材，在背靠背比赛的日子里，赛前、赛中、赛后的营养和水分补充的具体建议是什么？",
+    "category": "mixed_language",
+    "answerability": "answerable",
+    "expected_agents": [
+      "training",
+      "rehab",
+      "nutrition"
+    ],
+    "created_at": "2026-04-02T06:46:40.184341+00:00",
+    "notes": "Failure mode targeted: Mixed language query for a team sport athlete (basketball), requiring in-season programming, injury prevention for a specific joint, and competition nutrition. Tests the system's ability to apply the corpus's principles (largely geared towards strength sports) to a related but distinct athletic context."
+  },
+  {
+    "id": "adv-049",
+    "query": "I'm analyzing the biomechanics of the Olympic snatch for a research project. I'm particularly interested in the transition from the first to the second pull. My literature review needs to cover: 1) The physiological demands of the snatch and how training adaptations for it align with or differ from general strength training principles as discussed in Zatsiorsky's work. 2) Common technical errors in the pull that lead to lumbar spine or shoulder injuries, and the corrective exercises or mobility drills recommended in modern rehab texts like those by Horschig or Starrett. 3) The unique nutritional considerations for an athlete training the snatch multiple times daily, focusing on nutrient timing for neural recovery and power output, as per sports nutrition science. This is a theoretical analysis, not personal advice.",
+    "category": "long_multipart",
+    "answerability": "answerable",
+    "expected_agents": [
+      "training",
+      "rehab",
+      "nutrition"
+    ],
+    "created_at": "2026-04-02T06:46:40.184341+00:00",
+    "notes": "Failure mode targeted: Long, academic-style query framing a multi-domain literature review request. Tests the system's ability to handle abstract, research-oriented questions and retrieve foundational principles from each domain's authoritative texts, rather than just providing prescriptive advice."
+  },
+  {
+    "id": "adv-050",
+    "query": "My goal is to build a home gym training program for general fitness and resilience. I have a barbell, rack, and bench. I have no major injuries but sit at a desk all day. I also cook all my meals at home. I need a holistic guide covering: A detailed 4-day upper/lower split program utilizing progressive overload, explaining the rationale for exercise selection and set/rep schemes from fundamental strength training philosophy. A daily 10-minute mobility routine, compiled from key exercises in *Becoming a Supple Leopard*, targeting the hips, thoracic spine, and shoulders to counteract sitting. A simple, flexible meal-prepping framework based on sports nutrition plate-method guidelines, ensuring adequate protein and micronutrients for recovery and health, without requiring precise calorie counting.",
+    "category": "long_multipart",
+    "answerability": "answerable",
+    "expected_agents": [
+      "training",
+      "rehab",
+      "nutrition"
+    ],
+    "created_at": "2026-04-02T06:46:40.184341+00:00",
+    "notes": "Failure mode targeted: Long, integrative query for a general population goal, requesting a complete 'starter pack' from all three domains. Tests the router's ability to identify the distinct domain needs within a broad request and each agent's ability to provide accessible, foundational advice from their respective corpora."
+  }
+]

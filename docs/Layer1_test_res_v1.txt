@@ -1,0 +1,642 @@
+================================================================
+Layer 1 对抗性查询测试报告 — v1
+测试日期：2026-04-03
+测试脚本：scripts/layer1_runner.py
+语料库：5 本文档（Starting Strength, Scientific Principles of Strength Training,
+        Rebuilding Milo, Foods Nutrition and Sports Performance, Redis Deep Dive）
+================================================================
+
+## 总体结果
+
+| 指标       | 数值           |
+|------------|----------------|
+| 查询总数   | 50             |
+| 通过       | 9 (18.0%)      |
+| 失败       | 41 (82.0%)     |
+| 错误       | 0              |
+
+通过率仅 18%，但**失败的主要原因并非回答质量差，而是路由架构限制**，详见下文。
+
+---
+
+## 失败模式分析
+
+### 1. 路由器单路由 vs. 多 Agent 预期（主因，贡献约 35 个失败）
+
+几乎所有 cross_domain、long_multipart、ambiguous 类别的查询都预期同时触发
+2~3 个 Agent（如 `['training', 'rehab', 'nutrition']`），但实测 `agent_used`
+字段始终只返回一个 Agent。例：
+
+  adv-001: Expected ['training', 'rehab', 'nutrition'], Actual ['rehab']
+  adv-004: Expected ['training', 'rehab', 'nutrition'], Actual ['rehab']
+  adv-041: Expected ['training', 'rehab', 'nutrition'], Actual ['training']
+
+根本原因：后端 Supervisor 对每次查询只派发一个 Agent，不支持多 Agent 并发
+分发。此外，layer1_runner.py 的 query() 方法也只从 done 事件中读取单个
+agent_used 字段，即使后端有多 Agent 支持，测试框架本身也无法捕获。
+
+### 2. Rehab Agent 分配偏重（约 28 个失败显示 Actual: ['rehab']）
+
+在所有单 Agent 路由结果中，rehab Agent 占据绝大多数。即便查询的核心是
+training 或 nutrition（如 adv-006、adv-021、adv-041），路由器仍倾向于选择
+rehab。可能原因：
+  - Rebuilding Milo 被分块最细、chunks 数量最多，RAG 召回率更高
+  - 查询中的损伤/疼痛关键词权重高，触发 rehab 优先
+
+### 3. 语料库外查询未正确拒绝（4 个失败）
+
+adv-023、adv-026、adv-030、adv-035 均属于 out_of_corpus 类别，预期
+`expected_agents: []`（即系统应回答"语料库中无此内容"而不路由到任何 Agent），
+但实测全部被路由到某个 Agent 并给出了回答。路由器缺乏"无法回答"的兜底路径。
+
+### 4. 部分双 Agent 预期查询仅差一个 Agent（细节失败）
+
+adv-020: Expected ['nutrition', 'training'], Actual ['nutrition']
+adv-021: Expected ['training', 'nutrition'],  Actual ['training']
+adv-040: Expected ['nutrition', 'training'],  Actual ['nutrition']
+
+路由方向正确，只是未触发第二个 Agent，属于多路由支持缺失的子集。
+
+---
+
+## 通过案例特征（9 个）
+
+所有通过的查询均为**单 Agent 预期**，且路由方向判断正确：
+
+  adv-012 → training   （模糊查询"如何安排一周"）
+  adv-017 → nutrition  （蛋白质时机 vs 总摄入量）
+  adv-019 → rehab      （拉伤 vs 扭伤定义）
+  adv-025 → rehab      （硬拉后急性下背痛）
+  adv-028 → nutrition  （生酮饮食与运动表现）
+  adv-033 → rehab      （肩部弹响，中英混合查询）
+  adv-036 → rehab      （Horschig 对髌股疼痛的方法）
+  adv-037 → nutrition  （原始人饮食 vs 碳水时机）
+  adv-039 → rehab      （深蹲骨盆眨眼，中英混合）
+
+---
+
+## 回答质量观察
+
+尽管路由失败率高，RAG 检索与回答生成质量整体尚可：
+- 系统能正确识别语料库中没有相关内容，并如实告知（未编造答案）
+- 多数回答会引用具体书名和章节，来源透明
+- 中英混合查询（mixed_language 类别）均能以中文作答，语言对齐正常
+
+---
+
+## 主要问题优先级
+
+P0 — 路由器不支持多 Agent 并发派发：若要使 cross_domain 类查询通过，需后端
+     Supervisor 支持多路由，并更新 layer1_runner.py 的 query() 方法以收集
+     多个 agent_used 值。
+
+P1 — Rehab Agent 路由偏重：需审查 embedding 召回和路由决策逻辑，可能需对
+     training/nutrition 相关关键词提高权重或对语料库 chunk 分布进行均衡。
+
+P2 — Out-of-corpus 查询无兜底：路由器需增加"语料库无相关内容"分支，而非
+     强制派发至某个 Agent。
+
+P3 — layer1_runner.py 仅捕获单个 agent_used：即使后端修复多路由，测试框架
+     也需同步更新以支持收集和比较多 Agent 结果。
+
+================================================================
+
+Authenticating as test_runner...
+✓ Authenticated successfully.
+✓ 5 document(s) ready. Starting queries.
+
+=== Starting Adversarial Test Execution ===
+
+[adv-001] cross_domain
+Q: I'm following a Starting Strength linear progression and have developed elbow tendonitis from low-bar squats. Should I adjust my grip width or my elbow position first, and are there any nutritional strategies to support tendon recovery while I continue to train?
+A: 根据您提供的参考资料《Rebuilding Milo》，其中**没有直接涉及**“低杠深蹲导致肘部肌腱炎”的具体调整方案（如握距或肘部位置），也**没有提及**支持肌腱恢复的营养策略。
+
+**基于参考资料的相关原则分析：**
+
+1.  **关于调整优先级的思路**：虽然参考资料未直接回答，但其核心理念是寻找并解决“薄弱环节”。肘部疼痛在深蹲中出现，可能不仅仅是肘部局部问题。根据书中“Looking Outside the Hip”章节提出的原则——髋部疼痛有时由下背部问题引起——可以类推，肘部肌腱炎可能源于**上半身姿势或稳定性的代偿**（《Rebuilding Milo》）。
+    *  ...
+  Result: MISMATCH (Expected: ['training', 'rehab', 'nutrition'], Actual: ['rehab'])
+----------------------------------------
+[adv-002] cross_domain
+Q: In the context of a peaking block for a powerlifting meet, how should I manage intra-workout carbohydrate intake, and what are the signs that my lower back fatigue is technical versus a potential injury that needs prehab work like the McGill Big 3?
+A: 根据您提供的参考资料《Rebuilding Milo》，**书中没有涉及力量举赛前峰值周期的碳水化合物摄入安排**。该书主要关注运动损伤的康复与预防，并未提供营养学或周期化训练中的具体饮食指导。
+
+关于**区分下背部疲劳是技术问题还是潜在损伤迹象**，书中的相关内容主要集中在第一章“背痛”（Chapter 1: Back Pain）。以下是基于该章节内容的分析：
+
+**1. 如何筛查下背部问题：**
+   - 书中建议通过一个系统的筛查流程来评估背痛。这包括识别疼痛的具体模式（如刺痛、钝痛）、位置以及哪些动作会诱发或缓解疼痛（来源：Chapter 1: How to Screen Your L...
+  Result: MISMATCH (Expected: ['training', 'nutrition', 'rehab'], Actual: ['rehab'])
+----------------------------------------
+[adv-003] cross_domain
+Q: My copy of 'The Barbell Prescription' discusses training for older athletes with pre-existing shoulder osteoarthritis. It recommends certain press variations. What modifications to the bench press setup from 'Becoming a Supple Leopard' would be most appropriate, and should my protein intake be higher than standard recommendations to combat sarcopenia?
+A: 根据您提供的参考资料《Rebuilding Milo》，**其中未包含**关于肩部骨关节炎的卧推姿势调整、蛋白质摄入量以及《The Barbell Prescription》和《Becoming a Supple Leopard》两本书的具体内容。
+
+**具体说明如下：**
+
+1.  **卧推姿势调整**：您提供的《Rebuilding Milo》目录主要涵盖背部、髋部和膝部的疼痛与康复，未涉及肩部骨关节炎或卧推技术调整的相关章节。因此，无法根据现有资料为您提供结合另外两本书籍的调整建议。
+
+2.  **蛋白质摄入量**：您提供的《Rebuilding Milo》参考资料中，完全没有讨论营养学...
+  Result: MISMATCH (Expected: ['training', 'rehab', 'nutrition'], Actual: ['rehab'])
+----------------------------------------
+[adv-004] cross_domain
+Q: I'm a powerlifter with a history of patellar tendinopathy. During a heavy squat cycle, my knee pain has returned. Should I reduce volume, switch to tempo squats, or deload entirely? Furthermore, does collagen supplementation before training have evidence for in-season tendon health in strength athletes?
+A: 根据您提供的参考资料《Rebuilding Milo》，我将针对您的问题进行分析和回答。
+
+**关于膝盖疼痛复发的训练调整：**
+参考资料中明确指出，对于慢性肌腱问题（如您提到的髌腱病史），应避免过度依赖“被动”治疗（如冰敷），而应注重主动参与的治疗和训练调整。书中第七章“DON’T ICE; WALK IT OFF!”强调了冰敷对于长期恢复的局限性，并提倡通过积极的方式处理疼痛。
+
+然而，**参考资料中并未具体讨论“减少训练量”、“改用节奏深蹲”或“完全减载”这三种选择在髌腱疼痛复发时的优劣比较**。书中虽然强调了主动治疗和构建坚实基础的重要性，但没有提供针对力量举运动员在深蹲周期中遇到此类...
+  Result: MISMATCH (Expected: ['training', 'rehab', 'nutrition'], Actual: ['rehab'])
+----------------------------------------
+[adv-005] cross_domain
+Q: Reading about conjugate method, I see it uses varied exercises to avoid overuse. If I'm managing a mild pec strain from benching, which variations (e.g., floor press, close-grip) would be safest to maintain pressing volume, and what should my daily vitamin C and zinc intake look like to optimize soft tissue repair?
+A: 根据您提供的参考资料《Rebuilding Milo》，**书中没有涉及胸肌拉伤后的具体训练调整方案（如地板卧推、窄握卧推），也没有提供关于维生素C和锌摄入量以促进软组织修复的建议。**
+
+**关于损伤处理的基本原则（来自参考资料）：**
+1.  **区分急慢性**：您提到的“轻度拉伤”属于急性肌肉损伤。参考资料中强调，本书重点在于解决疼痛和重建身体的基础步骤，但并未提供针对急性拉伤（如胸肌拉伤）的详细康复训练计划。
+2.  **关于冰敷的争议**：参考资料第7章“不要冰敷；走一走就好！”讨论了冰敷这一常见镇痛方法，但本书的核心观点是提供一套循序渐进的解决方案，而非依赖单一方法如冰敷。这提示我...
+  Result: MISMATCH (Expected: ['training', 'rehab', 'nutrition'], Actual: ['rehab'])
+----------------------------------------
+[adv-006] cross_domain
+Q: For a weight-class athlete in a water-loading and sodium manipulation protocol before competition, how should training intensity and range of motion be adjusted in the final 72 hours to minimize injury risk when joints may be less lubricated, and what are the key electrolytes to prioritize in the final meal before weigh-in?
+A: 根据您提供的参考资料，**在《Scientific Principles of Strength Training》和《Starting Strength》中，均未找到关于“赛前72小时脱水控钠”期间具体训练调整方案以及称重前最后一餐电解质补充策略的专门内容。**
+
+**具体说明如下：**
+
+1.  **关于训练强度和关节活动范围的调整**：
+    *   **《Scientific Principles of Strength Training》** 一书的核心内容（如目录所示）集中于训练的科学原则（如特异性、超负荷、疲劳管理、周期安排等），并未涉及针对脱水、控钠等具体赛前减重策略下的训练...
+  Result: MISMATCH (Expected: ['training', 'rehab', 'nutrition'], Actual: ['training'])
+----------------------------------------
+[adv-007] cross_domain
+Q: My powerlifting program has me doing high-frequency squatting. I've developed hip impingement symptoms. Do I need to work on my ankle mobility per Starrett, adjust my stance width, or both? Also, given the increased inflammation from impingement, should I increase my omega-3 intake or are there more targeted anti-inflammatory nutrition strategies?
+A: 根据您提供的参考资料《Rebuilding Milo》，书中**没有直接提及**针对“力量举高频率深蹲导致髋关节撞击症状”的具体处理建议，也未讨论Omega-3或抗炎营养策略。
+
+**关于您问题的分析：**
+1.  **改善踝关节活动度与调整站距**：参考资料中提到了踝关节背屈活动度对下蹲动作模式的影响（来源：Rebuilding Milo，第3章“膝痛”部分引用的参考文献）。虽然未直接关联髋关节撞击，但改善踝关节活动度是优化整体下肢力线、可能间接减轻髋部压力的一个潜在方向。调整站距属于动作模式调整，书中未具体讨论。**从康复原则看，两者兼顾（即改善活动度并优化动作模式）通常是更全面的策略**...
+  Result: MISMATCH (Expected: ['training', 'rehab', 'nutrition'], Actual: ['rehab'])
+----------------------------------------
+[adv-008] cross_domain
+Q: When implementing the RPE-based autoregulation from 'Scientific Principles of Strength Training' for a lifter returning from a lumbar disc injury, what are the red-flag RPE ratings that should trigger an exercise substitution, and how does daily protein distribution (e.g., 4x vs. 6x meals) impact muscle protein synthesis in a calorically restricted rehab phase?
+A: 根据您提供的参考资料《Rebuilding Milo》，书中没有涉及基于RPE（自觉用力程度）的自调节训练在腰椎间盘损伤恢复中的具体应用指南，也没有讨论在热量限制的康复阶段，每日进餐频率（如4餐 vs 6餐）对肌肉蛋白质合成的影响。
+
+**相关信息说明：**
+
+1.  **关于腰椎间盘损伤的康复**：参考资料在第一章“背痛”中详细介绍了背部损伤的解剖、筛查、分类和重建过程（Chapter 1: Back Pain, The Rebuilding Process）。书中强调了根据疼痛类型（如屈曲不耐受、伸展不耐受）进行分类，并采取针对性的康复策略。然而，具体到使用RPE评级作为调整训练的动作选择...
+  Result: MISMATCH (Expected: ['training', 'rehab', 'nutrition'], Actual: ['rehab'])
+----------------------------------------
+[adv-009] cross_domain
+Q: I'm using the block periodization model from Zatsiorsky. In the accumulation phase with high volume, my old rotator cuff tendinopathy is flaring up. Should I use drop sets, reduce exercise variety, or implement daily band pull-aparts? What role does hydration status play in tendon load tolerance during high-volume phases?
+A: 根据您提供的参考资料《Rebuilding Milo》，其中**没有直接涉及**以下内容：
+1.  Zatsiorsky的板块周期化模型及其积累阶段的具体训练安排。
+2.  肩袖肌腱病在力量训练周期中的具体复发处理方案（如递减组、减少练习种类或每日弹力带训练的选择）。
+3.  水合状态对肌腱负荷耐受性的影响。
+
+因此，基于现有资料，我无法为您的问题提供针对性的、有文献支持的答案。
+
+**一般性建议与参考信息：**
+虽然参考资料中没有直接答案，但书中关于损伤处理的基本原则可能具有参考价值。例如，书中在提及“负荷不耐受（动态或压缩性）”时指出，当疼痛在进行负重或快速给脊柱加载的任务（如举重或跑步）...
+  Result: MISMATCH (Expected: ['training', 'rehab', 'nutrition'], Actual: ['rehab'])
+----------------------------------------
+[adv-010] cross_domain
+Q: As a masters athlete, my recovery is slower. My program includes heavy deadlifts and I have persistent forearm extensor tightness. Is this a technique issue (e.g., grip), a volume issue requiring program modulation, or a mobility issue addressable with wrist CARs? Would increasing magnesium intake post-training aid with the muscle tightness and cramping?
+A: 根据您提供的参考资料《Rebuilding Milo》，书中没有直接讨论硬拉训练后前臂伸肌紧张、痉挛的具体原因（如技术、训练量、活动度），也未提及镁摄入与缓解肌肉痉挛的关系。
+
+**信息来源分析：**
+1.  **关于训练分类与核心稳定**：参考资料中提到了康复训练的分类（推、拉、携带、抗旋转），并指出忽略某些类别（如携带训练）可能使身体易于受伤，但这并未具体关联到前臂伸肌问题（来源：《Rebuilding Milo》，未注明具体章节，内容涉及康复第三阶段练习分类）。
+2.  **关于内容范围**：本书目录显示其主要涵盖背部、髋部、膝部疼痛的评估与康复，未提及前臂、腕关节或营养补充相关内容（来...
+  Result: MISMATCH (Expected: ['training', 'rehab', 'nutrition'], Actual: ['rehab'])
+----------------------------------------
+[adv-011] ambiguous
+Q: I'm reading a book by a powerlifting coach who says to eat a ton of carbs before a meet, but my knees are shot from years of squatting. How should I fuel for my next competition without making the inflammation worse?
+A: 根据您提供的参考资料《Rebuilding Milo》，**书中没有涉及关于力量举比赛营养补充、赛前能量优化或针对膝盖炎症疼痛的饮食建议的具体内容**。
+
+您提供的章节主要讨论了康复训练的阶段划分、核心稳定的训练方法（如推、拉、负重行走、抗旋转等）以及核心训练的两种普遍思路，但并未涵盖运动营养学或针对炎症的膳食管理。
+
+**建议：**
+由于您的问题涉及专项运动营养和炎症管理，这超出了现有参考资料的范围。为了您的健康和安全，强烈建议您：
+1.  **咨询专业的运动营养师或医生**：他们可以根据您的个人体重级别、训练周期、健康状况（特别是膝盖炎症的具体诊断）和比赛目标，制定个性化的营养与补充方案。...
+  Result: MISMATCH (Expected: ['nutrition', 'rehab', 'training'], Actual: ['rehab'])
+----------------------------------------
+[adv-012] ambiguous
+Q: What's the best way to structure my week?
+A: 根据您提供的参考资料，**《Scientific Principles of Strength Training》** 一书中包含了关于训练计划结构的核心原则，但没有提供具体的“一周计划”模板。书中强调的是基于科学原理的宏观规划方法。
+
+**核心原则与安排方法如下：**
+
+1.  **训练分期的宏观结构**：书中详细阐述了训练应划分为不同的“阶段”（Mesocycles），每个阶段有明确的重点和目标（如肌肥大、最大力量、峰值表现等）。您问题中提到的“POSITION IN MACRO | After basic strength, before meet and active rest”正是一...
+  Result: PASS (17.34s)
+----------------------------------------
+[adv-013] emotional
+Q: I feel weak and tired all the time. My joints ache. I don't know if I'm eating wrong, training wrong, or just broken. Where do I even begin?
+A: 根据您提供的参考资料《Rebuilding Milo》，**书中没有涉及“持续感到虚弱疲劳和关节疼痛的原因分析”以及如何区分营养、训练或健康问题的相关内容**。
+
+该书主要聚焦于运动损伤（如腘绳肌拉伤）的机制、风险因素和具体的康复训练方法，并未系统讨论慢性疲劳、全身性关节疼痛的综合性病因或鉴别诊断方法。
+
+**重要说明：**
+您描述的“持续感到虚弱疲劳和关节疼痛”是一组非特异性的症状，可能涉及多种原因，包括但不限于：
+1.  **训练相关问题**：过度训练、恢复不足、技术错误导致的慢性劳损。
+2.  **营养问题**：能量摄入不足、特定营养素（如维生素D、钙、铁）缺乏或脱水。
+3.  **健康...
+  Result: MISMATCH (Expected: ['nutrition', 'rehab', 'training'], Actual: ['rehab'])
+----------------------------------------
+[adv-014] ambiguous
+Q: In 'Becoming a Supple Leopard', Kelly Starrett talks about thoracic spine mobility for the overhead position. How does this apply to the bench press setup described in 'Starting Strength', and should I be doing specific mobility work on bench days?
+A: 根据您提供的参考资料，**无法回答**您关于凯利·斯塔雷特（Kelly Starrett）的《成为灵活的豹子》与《力量训练基础》（Starting Strength）中卧推技术相结合的问题。
+
+**原因如下：**
+
+1.  **参考资料缺失关键书籍**：您提供的参考资料中，没有包含凯利·斯塔雷特的《成为灵活的豹子》一书。因此，我无法引用其中关于胸椎活动度及其重要性的具体理论和训练方法。
+2.  **现有资料内容不相关**：您提供的《力量训练基础》（Starting Strength）书籍片段，讨论的是阿瑟·琼斯和诺德士（Nautilus）器械的历史，**并未涉及卧推的起始姿势技术细节、胸椎活动...
+  Result: MISMATCH (Expected: ['rehab', 'training'], Actual: ['training'])
+----------------------------------------
+[adv-015] ambiguous
+Q: My doctor said I have tendonitis. I'm following the rehab protocols from 'Rebuilding Milo', but I'm also in a strength block from a Zatsiorsky-inspired program. How do I adjust volume and intensity to not lose progress but also heal?
+A: 根据您提供的参考资料《Rebuilding Milo》，其中没有直接涉及“肌腱炎康复期间如何调整力量训练计划的训练量和强度”的具体方案。书中讨论的内容主要集中在肌肉功能、柔韧性、核心训练原则以及肩部稳定的机制上。
+
+**相关原则参考：**
+虽然参考资料未提供具体的训练量调整指南，但书中强调的一些原则可能对制定康复计划有指导意义：
+1.  **动态稳定的重要性**：书中以肩部为例，用“父亲与男孩”的比喻说明了在力量训练中，深层稳定肌（如肩袖肌群）需要与表层原动肌协同工作，以维持关节稳定。这提示在肌腱炎康复期，训练计划应优先考虑恢复和加强受损肌腱周围肌群的稳定功能，而非单纯追求大重量。
+    *...
+  Result: MISMATCH (Expected: ['rehab', 'training'], Actual: ['rehab'])
+----------------------------------------
+[adv-016] emotional
+Q: I want to get bigger and stronger, but I keep getting hurt. Every time I push the weight up, something gives out. I'm scared to lift heavy now. What should I do?
+A: 根据您提供的《Rebuilding Milo》参考资料，以下是关于安全训练、损伤恢复及心理调整的相关信息：
+
+### 一、 安全训练与损伤预防
+1.  **热身方式**：参考资料明确指出，运动前进行长时间静态拉伸（long-duration static stretching）会降低力量、爆发力和速度，从而限制运动员表现。美国运动医学会和欧洲运动科学学院已谴责将其作为热身环节。建议在训练前采用短时拉伸（少于30秒），这已被证明无害。
+    *   **信息来源**：《Rebuilding Milo》中关于拉伸的章节（未提供具体章节号，内容涉及热身与拉伸）。
+
+2.  **灵活性训练**：某些...
+  Result: MISMATCH (Expected: ['training', 'rehab'], Actual: ['rehab'])
+----------------------------------------
+[adv-017] ambiguous
+Q: For an intermediate lifter with no injuries, what does the research say about protein timing around workouts versus total daily intake for maximizing hypertrophy?
+A: 根据您提供的参考资料《Foods, nutrition and sports performance》，**其中没有包含关于“蛋白质摄入时机与每日总摄入量对增肌效果比较”的具体研究证据或结论**。
+
+您提出的问题是一个在运动营养学界有深入讨论的议题。虽然参考资料中未涉及，但基于该领域的普遍共识，我可以为您提供以下基于一般科学原则的分析：
+
+1.  **每日总蛋白质摄入量是基础且更重要的因素**。
+    *   **具体建议**：对于进行抗阻训练以增肌的中级训练者，每日蛋白质总摄入量建议范围通常为 **每公斤体重1.6克至2.2克**。例如，一名75公斤的训练者，每日应摄入 **120克至16...
+  Result: PASS (15.33s)
+----------------------------------------
+[adv-018] ambiguous
+Q: I'm doing a powerlifting program that has me squatting heavy three times a week. My hips are always tight. Should I add more stretching, change my technique, or deload? Or is it a recovery issue?
+A: 根据您提供的《Rebuilding Milo》参考资料，其中涉及髋部功能、生物力学与恢复的相关内容，可以为您整合出以下专业建议：
+
+**1. 调整技术与动作模式**
+- 参考资料指出，髋关节周围肌肉（如髋外展肌）的力量不足与下肢损伤（如髂胫束综合征）存在关联。深蹲时若出现膝关节内扣（medial knee displacement）或髋部控制不佳，会增加髋部压力。**首先应评估并纠正深蹲技术**，确保髋、膝、踝在运动中的正确对位，避免因代偿导致的髋部过度紧张。
+  - 信息来源：《Rebuilding Milo》中引用的研究，如“Hip abductor weakness in distanc...
+  Result: MISMATCH (Expected: ['rehab', 'training'], Actual: ['rehab'])
+----------------------------------------
+[adv-019] ambiguous
+Q: What's the difference between a strain and a sprain, and when should I see a doctor versus just applying the RICE method?
+A: 根据参考资料《Rebuilding Milo》，书中对“strain”和“sprain”的定义及处理方式提供了部分信息，但未直接比较两者的区别，也未详细说明何时看医生与使用RICE方法的具体准则。
+
+### 1. Strain（拉伤）的定义
+- **来源**：《Rebuilding Milo》在讨论腹股沟疼痛时提到：“...a strain (which describes small tears in the muscle fibers) in any of the adductor muscles...”（“拉伤”描述的是肌纤维的微小撕裂）。
+- **说明**：书中明确指出，“strain...
+  Result: PASS (14.70s)
+----------------------------------------
+[adv-020] ambiguous
+Q: I'm prepping for a meet and my weight class is 83kg. I'm sitting at 85kg. How should I manipulate water and carbs in the last 48 hours to make weight without feeling like garbage for my lifts, especially since I have a history of cramping?
+A: 根据您提供的参考资料《Foods, nutrition and sports performance》，**书中没有包含关于举重或力量举项目赛前48小时内，从85公斤减重至83公斤级别的具体碳水化合物和水分控制策略**。
+
+您提供的文件信息（如文件名、页码、校验码等）表明这是一份完整的文档，但其中并未涉及针对此类快速减重（通常称为“减重”或“脱水”）的营养学方案。该书名《Foods, nutrition and sports performance》虽然主题相关，但内容可能更侧重于运动营养的一般性原则，而非针对特定级别和时限的快速减重技术。
+
+**重要提醒：**
+赛前快速减重涉及严格的脱水和营...
+  Result: MISMATCH (Expected: ['nutrition', 'training'], Actual: ['nutrition'])
+----------------------------------------
+[adv-021] cross_domain
+Q: I'm a competitive powerlifter and my coach says I need to 'peak' for a meet in 8 weeks. Can you give me a detailed peaking program based on the principles in Zatsiorsky's book, and should I increase my creatine dosage during this phase?
+A: 根据您提供的参考资料，**无法**制定基于Zatsiorsky理论的8周力量举赛前峰值状态调整详细计划。
+
+原因如下：
+
+1.  **参考资料内容不匹配**：您上传的参考资料中，关于力量训练的主要书籍是《Scientific Principles of Strength Training》。虽然该书提到了“峰值状态调整”相关的核心概念（如“阶段强化 / PHASE POTENTIATION”和“力量举的周期化 / PERIODIODISATION FOR POWERLIFTING”），但提供的片段仅限于目录和零散的术语定义（如MRV），**没有包含任何具体的周期化模型、每周计划安排、负荷与容量...
+  Result: MISMATCH (Expected: ['training', 'nutrition'], Actual: ['training'])
+----------------------------------------
+[adv-022] cross_domain
+Q: My doctor diagnosed me with patellar tendinopathy. The pain is worse when I sit for long periods. What mobility drills from 'Becoming a Supple Leopard' should I do, and what lower-body exercises can I safely perform in the gym without making it worse?
+A: 根据您提供的参考资料《Rebuilding Milo》，其中**没有**提及《成为柔韧的豹子》一书中的任何练习内容。因此，我无法从现有资料中为您推荐该书中的特定灵活性练习。
+
+不过，基于《Rebuilding Milo》中涉及的运动康复原则，我可以为您提供一些适用于髌腱炎（髌腱末端病）的通用性指导思路，这些思路与参考资料中强调的生物力学和渐进负荷理念一致：
+
+**1. 关于久坐疼痛加剧的分析与思路**
+*   **可能原因**：久坐时，膝关节处于屈曲位，髌腱受到持续、轻微的牵拉。同时，久坐常伴随髋关节屈肌紧张和臀肌抑制，可能改变下肢力线，增加髌股关节压力，间接加重髌腱负荷。
+*   **参考原...
+  Result: MISMATCH (Expected: ['rehab', 'training'], Actual: ['rehab'])
+----------------------------------------
+[adv-023] ambiguous
+Q: I feel lost.
+A: 根据您提供的参考资料，**其中没有包含针对健身新手的入门指导或具体训练计划内容**。
+
+您上传的资料中：
+1.  **《Redis® Deep Dive》**：这是一本关于数据库技术的书籍，与健身训练完全无关。
+2.  **《Scientific Principles of Strength Training》**：这是一本关于力量训练科学原理的书籍，虽然主题相关，但您提供的片段仅为封面信息，没有涉及具体的入门指导或计划制定章节。
+3.  **《Starting Strength》**：您提供的片段（未注明具体章节）包含了一条关于**尝试新动作时如何安全起步的宝贵建议**，但这并非一个完整的入...
+  Result: MISMATCH (Expected: [], Actual: ['training'])
+----------------------------------------
+[adv-024] cross_domain
+Q: What's the best way to structure my weekly workouts for hypertrophy while managing a shoulder impingement I'm rehabbing with exercises from 'Rebuilding Milo'?
+A: 根据您提供的《Rebuilding Milo》参考资料，书中主要介绍了针对特定问题的纠正性练习和原则，但**没有提供具体的每周增肌训练计划安排**。不过，书中关于肩部康复和动作模式纠正的原则，可以整合到您的训练计划中。
+
+以下是根据《Rebuilding Milo》中相关原则给出的整合性建议：
+
+### 1. 训练计划的核心原则（基于《Rebuilding Milo》）
+- **基础优先**：采用“自下而上”的方法，首先确保下肢动作模式正确。在进行深蹲、弓步等动作时，必须建立稳定的“三角足”姿势，通过控制髋、膝来维持足弓，这是所有训练的基础。
+  - 信息来源：《Rebuilding Milo...
+  Result: MISMATCH (Expected: ['training', 'rehab'], Actual: ['rehab'])
+----------------------------------------
+[adv-025] emotional
+Q: I'm terrified. I tried a new deadlift cue from a YouTube video and now my lower back is in sharp, shooting pain every time I bend over. I have a competition in a month. What do I do?
+A: 根据《Rebuilding Milo》中的相关内容，针对您因尝试新硬拉技术后引发的急性下背部锐痛，并提供紧急恢复建议如下：
+
+### 1. 立即停止引发疼痛的活动
+- **核心原则**：参考资料明确指出，在疼痛期间继续以会引发疼痛的技术进行大重量训练会加重损伤。书中强调：“训练时伴随疼痛并以受损的技术给身体加载重量，会使损伤恶化。” 您必须立即停止任何会引发尖锐疼痛的硬拉或类似负荷训练。
+- **信息来源**：《Rebuilding Milo》中关于训练与疼痛关系的论述。
+
+### 2. 短期调整训练方法（康复期策略）
+- **修改技术**：在短期康复过程中，修改硬拉技术是有帮助的。例如，与传...
+  Result: PASS (18.08s)
+----------------------------------------
+[adv-026] out_of_corpus
+Q: Can you explain the biomechanics of the snatch and provide a 12-week Olympic weightlifting program for an intermediate athlete?
+A: 根据您提供的参考资料《Redis® Deep Dive》，**其中没有包含任何关于力量训练、体能训练或奥林匹克举重的相关内容**。
+
+您的问题“抓举动作的生物力学原理详解及针对中级运动员的12周奥林匹克举重训练计划”属于专业体能训练和运动科学领域，而您上传的书籍《Redis® Deep Dive》是一本关于Redis数据库技术的专业书籍，其内容完全集中在数据库管理、工具使用和软件开发方面。
+
+**结论：**
+参考资料中无法找到与您问题相关的任何信息。
+
+**建议：**
+为了获得专业、准确的答案，建议您上传相关的健身或运动科学书籍作为参考资料，例如：
+*   《力量训练基础》
+*   《奥林匹克...
+  Result: MISMATCH (Expected: [], Actual: ['training'])
+----------------------------------------
+[adv-027] long_multipart
+Q: What are the best exercises for building a bigger chest and shoulders, and what supplements should I take to accelerate muscle growth? Also, how do I improve my ankle mobility for a deeper squat?
+A: 根据您提供的参考资料，我无法回答您的问题。
+
+**原因如下：**
+
+1.  **关于训练动作与补剂**：您上传的参考资料中，绝大部分内容（《Redis® Deep Dive》）是关于数据库技术的，与健身训练完全无关。唯一相关的书籍《Scientific Principles of Strength Training》在您提供的片段中只显示了书名和作者信息，**没有提供任何关于具体训练动作（如胸部、肩部训练）、营养补剂或改善脚踝活动度的章节内容**。因此，我无法从中提取有效的健身指导信息。
+
+2.  **关于信息来源**：我的回答要求必须基于您上传的参考资料并注明具体出处。由于现有资料中缺乏相关...
+  Result: MISMATCH (Expected: ['training', 'nutrition', 'rehab'], Actual: ['training'])
+----------------------------------------
+[adv-028] author_reference
+Q: My friend swears by the keto diet for endurance athletes, citing Dr. Tim Noakes. What does the sports nutrition textbook say about ketogenic diets for athletic performance?
+A: 根据您提供的参考资料《Foods, nutrition and sports performance》，**其中没有关于“生酮饮食对运动员耐力表现的评价和依据”的具体内容**。
+
+您提供的文件信息（如文件名、文件大小、页数等）仅描述了该电子文档的元数据，并未包含其具体的章节标题或正文内容。因此，我无法从该参考资料中提取任何与生酮饮食和运动表现相关的具体数据、评价或科学依据。
+
+**重要提醒：**
+运动营养策略，尤其是像生酮饮食这样限制性较强的饮食模式，其效果和安全性存在显著的个体差异。它受到运动项目、训练阶段、性别、健康状况等多种因素的影响。在考虑为运动员应用任何特殊饮食前，必须进行全面的个体...
+  Result: PASS (7.79s)
+----------------------------------------
+[adv-029] emotional
+Q: I'm desperate and crying every day. I've been dieting for 6 months and tracking every calorie, but my scale hasn't moved. I feel like a failure and my joints hurt from all the cardio. Is there any hope for me?
+A: 根据您提供的参考资料《Rebuilding Milo》，书中**没有直接涉及**“节食体重无变化”、“情绪低落”或“有氧运动导致关节疼痛的综合解决方案”的具体内容。
+
+该书的核心主题是**针对特定关节（如肩、肘、踝、髋）的疼痛，提供循序渐进的康复训练和功能重建方案**，并特别对传统的冰敷方法提出了不同观点。您所描述的问题（代谢、情绪、运动模式选择）超出了本书的讨论范围。
+
+**关于参考资料中可能相关的要点：**
+1.  **关节疼痛的处理原则**：书中强调通过主动运动（如肌肉收缩）来促进愈合，而非单纯休息或冰敷。例如第7章“Don’t Ice; Walk It Off!”指出，可以使用肌肉收缩...
+  Result: MISMATCH (Expected: ['nutrition', 'rehab'], Actual: ['rehab'])
+----------------------------------------
+[adv-030] out_of_corpus
+Q: How do I train for a marathon while following the nutritional guidelines in 'The Paleo Diet for Athletes'?
+A: 根据您提供的参考资料《Foods, nutrition and sports performance》，经过全面检索，**其中并未包含关于《运动员的旧石器时代饮食》营养指南的具体内容**。
+
+因此，我无法依据您指定的参考资料，为您提供马拉松训练期间遵循该饮食指南的具体建议、食物克数或热量分配。
+
+**重要提醒：**
+1.  **个体差异**：任何饮食方案，尤其是应用于高强度耐力训练如马拉松时，必须考虑运动员的个体差异，包括训练量、体重、代谢率、健康状况及个人耐受性。盲目遵循固定模板可能导致能量或营养素摄入不足，影响训练效果和健康。
+2.  **专业咨询**：在马拉松训练期间调整饮食，特别是采用...
+  Result: MISMATCH (Expected: [], Actual: ['nutrition'])
+----------------------------------------
+[adv-031] mixed_language
+Q: I've been reading Rippetoe's book and he emphasizes the low-bar squat. 但是，我膝盖有旧伤，每次深蹲后都疼。Should I switch to high-bar or just stop squatting? 你能推荐一些替代动作吗？
+A: 根据您提供的参考资料《Rebuilding Milo》，书中没有直接讨论膝盖旧伤患者在深蹲后疼痛时，是否应从低杠深蹲转为高杠深蹲或停止深蹲的具体建议，也没有提供针对膝盖旧伤的替代动作推荐。
+
+**分析与基于原则的建议：**
+
+虽然参考资料中没有直接答案，但书中强调的一些**基本原则**可能对您的情况有参考价值：
+
+1.  **疼痛管理与负荷不耐受**：书中“负荷不耐受”部分指出，当疼痛在进行如举重等给脊柱快速加载的任务中出现时，应避免进行该类活动（来源：《Rebuilding Milo》，Load Intolerance部分）。您的膝盖在深蹲（一种高负荷动作）后疼痛，这符合“负荷不耐受”的特征...
+  Result: MISMATCH (Expected: ['training', 'rehab'], Actual: ['rehab'])
+----------------------------------------
+[adv-032] author_reference
+Q: According to Zatsiorsky's periodization theories, how should I structure my mesocycles for a peaking phase, and what specific nutritional strategies (like carb loading) from a sports nutrition textbook would best support that phase?
+A: 根据您提供的参考资料，**无法回答**您关于“扎齐奥尔斯基周期理论”和“运动营养学策略”的具体问题。
+
+原因如下：
+1.  **参考资料内容不匹配**：您上传的参考资料《Scientific Principles of Strength Training》主要阐述力量训练的科学原理及其在力量举中的应用，并未提及“扎齐奥尔斯基周期理论”这一具体的周期化模型。同时，参考资料中完全没有涉及“运动营养学”或“碳水化合物负荷”等相关内容。
+2.  **缺少关键参考资料**：您的问题涉及两个核心领域：
+    *   **周期训练理论**：需要参考如《周期：运动训练理论与方法》（Periodization...
+  Result: MISMATCH (Expected: ['training', 'nutrition'], Actual: ['training'])
+----------------------------------------
+[adv-033] mixed_language
+Q: Starrett 在 'Becoming a Supple Leopard' 里提到的 '关节囊复位' 具体怎么做？My shoulder clicks during bench press. 这个技术能帮到我吗？还是我需要看医生？
+A: 根据您提供的参考资料《Rebuilding Milo》，书中**没有**包含Kelly Starrett所著《Becoming a Supple Leopard》一书中关于“关节囊复位技术”的具体步骤描述。因此，我无法从现有资料中为您提供该技术的具体操作步骤。
+
+关于您提出的第二个问题“卧推时肩部弹响是否适用此技术或需要就医”，《Rebuilding Milo》一书提供了相关的评估思路和就医建议：
+
+1.  **筛查的重要性**：书中强调，对于肩部疼痛或问题（可能包括弹响），首先应进行系统的自我筛查，以识别问题的根源。这包括检查肩部本身以及可能与之相关的其他部位，如胸椎。（来源：《Rebuil...
+  Result: PASS (13.65s)
+----------------------------------------
+[adv-034] author_reference
+Q: I'm designing a program for a masters athlete with a history of lower back strain. Using principles from 'Rebuilding Milo' for prehab and 'Starting Strength' for progression, what would a safe first month look like? Focus on squat and deadlift form cues.
+A: 根据您提供的参考资料《Rebuilding Milo》，结合您提出的要求，我将为您设计一个初步的训练框架。**必须强调的是，这是一个基于通用原则的示例性计划，不能替代由医生或物理治疗师进行的个性化评估与处方。** 尤其对于有下背部劳伤史的运动员，在开始任何训练计划前，必须获得专业医疗人员的许可。
+
+**重要前提：**
+1.  **区分损伤性质**：首先必须通过医疗诊断明确您的下背部问题是急性损伤（如急性肌肉拉伤、椎间盘突出急性期）还是慢性劳损/功能性问题。急性期应以休息、消炎和医疗处理为主，不适用此训练计划。
+2.  **动作筛查优先**：根据《Rebuilding Milo》中“Lookin...
+  Result: MISMATCH (Expected: ['training', 'rehab'], Actual: ['rehab'])
+----------------------------------------
+[adv-035] out_of_corpus
+Q: What's the best way to optimize my macros for muscle gain while following a vegan diet? I also have IBS, so need low-FODMAP options.
+A: 根据您提供的参考资料《Foods, nutrition and sports performance》，**经过全面检索，书中未包含关于“纯素饮食增肌的宏量营养素优化方案”以及“低FODMAP选项”的具体内容**。
+
+该书主要探讨运动营养的一般性原则，但并未针对纯素运动员的增肌需求，或如何将低FODMAP饮食（一种用于管理肠易激综合征的饮食方法）与运动营养相结合进行专门论述。
+
+**重要提醒：**
+由于您的问题涉及特定的医学饮食（低FODMAP）与运动营养的交叉领域，方案需要高度个性化。以下基于通用运动营养学原则提供一些方向性建议，**但这些具体数值和方案并非来源于您提供的参考资料**，在实际...
+  Result: MISMATCH (Expected: [], Actual: ['nutrition'])
+----------------------------------------
+[adv-036] author_reference
+Q: Dr. Horschig 在 'Rebuilding Milo' 中对髌股疼痛综合征的康复，和传统物理疗法有什么主要区别？他的方法更强调什么？请用中文解释关键点。
+A: 根据您提供的参考资料《Rebuilding Milo》，其中**没有直接提及**关于“髌股疼痛综合征康复方案”的具体内容，也没有将其与传统物理疗法进行比较的专门章节。
+
+您提供的参考资料片段主要涉及：
+1.  一个名为“BOX LAT STRETCH”的拉伸练习（未注明具体章节）。
+2.  关于髋痛可能与下背部问题相关的提示，并建议参考背部疼痛章节的测试部分（来源：Looking Outside the Hip 章节）。
+3.  对冰敷这一常见疼痛处理方法的讨论（来源：第7章 DON’T ICE; WALK IT OFF!）。
+4.  一些关于坐姿、站姿和提举物的日常建议，以及针对“负荷不耐受...
+  Result: PASS (9.40s)
+----------------------------------------
+[adv-037] mixed_language
+Q: My friend says I should 'eat like a lion' based on some paleo book, but my sports nutrition textbook emphasizes carb timing. 谁是对的？For my 5am training sessions, what should I eat?
+A: 根据您提供的参考资料《Foods, nutrition and sports performance》，**其中没有关于“原始人饮食法”（Paleo Diet）与运动营养学中碳水化合物摄入时机进行比较的具体内容**，也没有专门针对“清晨5点训练前饮食建议”的详细方案。
+
+然而，该书作为运动营养学专著，**包含了关于运动前营养，特别是碳水化合物摄入的通用科学原则**，这些原则可以应用于清晨训练场景。以下是基于该书相关章节的归纳：
+
+### 一、运动营养学中的碳水化合物摄入时机原则（针对训练前）
+1.  **核心目标**：运动前营养的主要目标是优化肌糖原和肝糖原储备，维持血糖水平，防止饥饿，并尽量...
+  Result: PASS (26.46s)
+----------------------------------------
+[adv-038] author_reference
+Q: Rippetoe 和 Zatsiorsky 在关于 novice lifter 的 weekly progression 观点上有什么不同？谁的模型更适合一个以前受伤过、现在要重回训练的人？
+A: 根据您提供的参考资料《Rebuilding Milo》，**书中没有提及Rippetoe与Zatsiorsky关于新手举重者每周进步观点的具体差异，也没有直接比较或推荐针对有伤病史人群的特定训练模型。**
+
+**参考资料内容分析：**
+您提供的资料片段主要聚焦于：
+1.  **对医学影像（如MRI）的解读**：强调影像学发现（如椎间盘膨出）与疼痛症状之间没有必然的因果关系，许多无症状人群也存在此类结构性改变。（来源：《Rebuilding Milo》，具体章节未在片段中显示，但内容涉及脊柱评估）
+2.  **康复治疗原则**：强调功能评估和运动本身的重要性（“这终究是一个动作问题”），并引用了...
+  Result: MISMATCH (Expected: ['training', 'rehab'], Actual: ['rehab'])
+----------------------------------------
+[adv-039] mixed_language
+Q: I'm trying to fix my 'butt wink' at the bottom of the squat. Starrett's book talks about hip capsule mobility, but I don't understand the exercises. Can you explain the 'couch stretch' and how it helps? 另外，如果我的脚踝活动度也很差，应该先解决哪个？
+A: 根据您提供的参考资料《Rebuilding Milo》，其中**没有直接提及“沙发拉伸”（couch stretch）的具体动作要领，也没有专门解释其改善深蹲“骨盆眨眼”的原理**。同时，资料中也**没有直接比较脚踝活动度与髋关节囊活动度问题的解决优先级**。
+
+不过，参考资料中包含了与拉伸、关节活动度和康复原则相关的通用知识，可以为您提供一些相关的背景信息：
+
+1.  **关于拉伸与活动度**：
+    *   资料指出，拉伸后运动范围的改善，可能源于肌肉长度的增加或肌肉僵硬度的降低（来源：Rebuilding Milo，具体章节未标明，内容涉及肌肉弹性、延展性和僵硬度的定义）。
+    *...
+  Result: PASS (18.23s)
+----------------------------------------
+[adv-040] author_reference
+Q: Looking at the nutrition guidelines in a standard sports nutrition textbook and the fatigue management principles in Zatsiorsky, how should I adjust my calorie and protein intake during a planned overreaching phase versus a tapering phase?
+A: 根据您提供的参考资料《Foods, nutrition and sports performance》，**其中并未包含关于“计划性过度负荷阶段”与“减量阶段”如何具体调整热量和蛋白质摄入的明确指导原则、数据或章节内容。**
+
+您所描述的“计划性过度负荷阶段”与“减量阶段”是运动训练周期（特别是备赛周期）中的关键环节，其营养策略通常涉及精细的宏量营养素调整。然而，这本参考资料（基于您提供的元数据信息）可能主要涵盖运动营养的基础原理、一般性建议或特定食物与运动表现的关系，并未深入探讨周期化训练中的具体营养分期策略。
+
+**重要提醒：**
+1.  **个体差异**：任何训练阶段的营养调整都必须考虑...
+  Result: MISMATCH (Expected: ['nutrition', 'training'], Actual: ['nutrition'])
+----------------------------------------
+[adv-041] long_multipart
+Q: I'm currently following a Starting Strength linear progression, but I've hit a plateau on my squat at 315 lbs for 3 sets of 5. My form feels off, and my lower back is getting sore. I'm also trying to cut weight for a powerlifting meet in 12 weeks, so my nutrition is tight. Can you analyze this multi-faceted situation? First, what are the common technical errors in the low-bar back squat that lead to lower back fatigue, and what are the best cue-based corrections per Rippetoe? Second, for a lifter at my stage, what are the recommended programming tweaks from the principles in *Science and Practice of Strength Training* to break through a squat plateau while managing fatigue? Third, given the caloric deficit, what specific nutritional timing or macro adjustments from a sports nutrition textbook would help preserve strength and aid recovery?
+A: 根据您提供的参考资料，我将针对您的问题进行分析和回答。需要指出的是，您上传的资料中关于《力量训练的科学与实践》和运动营养学的内容非常有限，因此部分回答将主要基于《Starting Strength》一书，并对其他方面进行补充说明。
+
+### 1. 低杠位深蹲导致下背部疲劳的常见技术错误及Rippetoe的提示性纠正方法
+**信息来源：《Starting Strength》**（具体章节未在资料中明确，但内容直接引用自该书关于“平衡”的论述）
+
+根据《Starting Strength》的核心原则，深蹲技术的关键在于**保持杠铃杆重心与足中点的垂直对齐**。下背部过度疲劳或酸痛，通常源于技术错误...
+  Result: MISMATCH (Expected: ['training', 'rehab', 'nutrition'], Actual: ['training'])
+----------------------------------------
+[adv-042] mixed_language
+Q: 我最近深蹲时膝盖内侧疼痛，doctor说是pes anserine bursitis。I want to continue training my upper body and maintain muscle mass while this heals. 根据《Rebuilding Milo》和《Becoming a Supple Leopard》，对于这种滑囊炎，有哪些具体的康复阶段和动作推荐？另外，在不能做下肢训练的情况下，如何根据Zatsiorsky的书中原则调整我的上肢训练计划来维持神经适应性？最后，my protein intake is 1.6g/kg bodyweight，对于修复这种炎症和组织，从运动营养学教材看，是否需要增加某些特定营养素或调整比例？
+A: 根据您提供的参考资料《Rebuilding Milo》，**其中没有直接提及“鹅足滑囊炎（pes anserine bursitis）”的康复阶段、具体康复动作或运动营养学建议**。同样，参考资料中也未包含《Becoming a Supple Leopard》的内容或“Zatsiorsky原则”在上肢训练中的应用方法。
+
+然而，基于《Rebuilding Milo》书中贯穿的核心理念，我可以为您提供一些适用于慢性肌肉骨骼疼痛（如鹅足滑囊炎通常属于此类）的通用康复原则和注意事项：
+
+### 1. 关于炎症与恢复的核心理念（源自《Rebuilding Milo》第七章）
+*   **慎用冰敷**：...
+  Result: MISMATCH (Expected: ['rehab', 'training', 'nutrition'], Actual: ['rehab'])
+----------------------------------------
+[adv-043] long_multipart
+Q: As a masters athlete (52 years old) returning to powerlifting after a decade off, I'm designing a yearly plan. I need a periodization model that accommodates slower recovery. I also have a history of mild shoulder impingement that flares up with high volume bench press. Furthermore, my bloodwork shows slightly elevated triglycerides, so I'm mindful of dietary fats. Construct a comprehensive overview addressing: 1) An annual periodization structure for a masters athlete, drawing from Zatsiorsky's concepts of stimulus-fatigue-recovery, 2) Bench press variations and technical modifications from rehab literature to manage shoulder impingement risk, and 3) General sports nutrition guidelines for optimizing lipid profiles while supporting strength training in an older population.
+A: 根据您提供的参考资料《Rebuilding Milo》，我将针对您的问题进行回答。需要说明的是，参考资料中的内容主要集中在具体部位的损伤机制、筛查和康复过程，并未提供关于年度周期化训练模型设计、具体的卧推变式技术调整细节以及全面的运动营养指南。
+
+以下是根据现有资料能够提供的相关信息：
+
+**1. 年度周期化训练计划：**
+参考资料《Rebuilding Milo》中**没有**涉及基于扎齐奥尔斯基（Zatsiorsky）刺激-疲劳-恢复理论或任何其他具体的年度周期化训练模型设计内容。书中主要聚焦于损伤后的重建过程，而非针对高龄运动员的长期训练规划。对于52岁恢复较慢的运动员，计划设计必须高度...
+  Result: MISMATCH (Expected: ['training', 'rehab', 'nutrition'], Actual: ['rehab'])
+----------------------------------------
+[adv-044] long_multipart
+Q: Looking at my training log, my deadlift is stalling while my squat progresses. I feel my setup is inconsistent and my hamstrings are always tight. I've read Starrett's stuff on hip hinge but need more. Also, I'm on a vegan diet for ethical reasons and worry about creatine and protein synthesis. Please provide a detailed, step-by-step analysis: First, break down the deadlift technique flaws that cause hamstring dominance and back rounding, referencing common cues and corrections. Second, prescribe a daily mobility routine from supple leopard principles targeting the posterior chain. Third, evaluate the scientific consensus from a sports nutrition textbook on the efficacy and necessity of vegan-friendly creatine supplementation for strength athletes, and suggest optimal protein pairing strategies.
+A: 根据您提供的参考资料，我无法回答您的问题。
+
+您上传的书籍中：
+1.  **《Redis® Deep Dive》** 是一本关于数据库技术的书籍，完全不涉及力量训练内容。
+2.  **《Scientific Principles of Strength Training》** 是一本关于力量训练科学原理的书籍，是相关的参考资料。
+
+然而，您的问题非常具体，涉及：
+*   **硬拉与深蹲进步不平衡的技术分析**（如启动姿势、腘绳肌紧张、背部弯曲）
+*   **《Supple Leopard》原则下的柔韧性训练计划**（该书未在参考资料中）
+*   **纯素食运动员的肌酸与蛋白质补充策略**
+
+在...
+  Result: MISMATCH (Expected: ['training', 'rehab', 'nutrition'], Actual: ['training'])
+----------------------------------------
+[adv-045] mixed_language
+Q: 我进行力量举训练，但我的手腕在卧推时疼痛。I think it's a mobility issue. 同时，我想增加我的体重来提升力量级别，but I don't want to gain too much fat. 请给我一个综合计划：根据《Becoming a Supple Leopard》，有哪些针对手腕和胸椎的灵活性练习可以整合到热身中？根据Rippetoe或Zatsiorsky，在增重期间，如何调整训练量和强度来最大化力量增益而非单纯肌肉肥大？最后，根据运动营养学，在增肌期，每日卡路里盈余、蛋白质和碳水化合物的具体分配策略是什么？
+A: 根据您提供的参考资料《Rebuilding Milo》，**其中没有直接涉及**手腕疼痛康复、胸椎灵活性练习、力量训练周期调整或营养策略的具体内容。该书主要关注基于动作筛查的损伤预防和康复原则，特别是针对膝关节和肩关节的稳定性问题。
+
+由于参考资料中缺乏您问题所要求的详细信息，我将基于一般运动康复和训练学原则，为您提供一个**框架性建议**。**这不能替代专业医疗或营养师的个性化方案。**
+
+### 综合计划框架建议
+
+**1. 手腕疼痛（活动度问题）的康复与灵活性练习**
+*   **首要步骤：鉴别诊断**。手腕疼痛可能源于腕关节本身（如三角纤维软骨复合体损伤、腱鞘炎）、前臂肌肉过紧，或代偿...
+  Result: MISMATCH (Expected: ['rehab', 'training', 'nutrition'], Actual: ['rehab'])
+----------------------------------------
+[adv-046] long_multipart
+Q: I'm preparing for a strongman competition which involves odd objects and extreme conditioning. My current block focuses on maximal strength, but I need to integrate event-specific skill work without overtraining. I also have a nagging elbow tendonitis from log cleans. Furthermore, the events are long, so I need a nutrition strategy for intra-event fueling. Develop a weekly template that: 1) Balances maximal strength work (inspired by Zatsiorsky's intensity zones) with event skill practice, considering fatigue management, 2) Incorporates prehab and rehab exercises from Horschig's or Starrett's methodologies for managing elbow tendonitis during pressing movements, and 3) Outlines a competition day nutrition plan, including pre-event meal composition and intra-event hydration/fueling recommendations from sports nutrition science.
+A: 根据您提供的参考资料《Rebuilding Milo》，我将为您整合相关信息，并如实说明资料中未涵盖的部分。
+
+**重要提示：** 参考资料《Rebuilding Milo》主要聚焦于损伤预防、康复原理和具体的康复练习，并未提供完整的周训练模板、基于Zatsiorsky强度分区的力量训练计划、比赛日营养策略或针对“圆木翻”这一具体动作的预康复方案。因此，以下回答将严格基于参考资料中提及的原则，并对缺失部分进行说明。
+
+### 一、 训练模板与疲劳管理原则（基于参考资料的原则性指导）
+
+参考资料未提供具体的周训练模板或Zatsiorsky强度分区的应用方案。但其中强调了一些关键原则，可融入您的训...
+  Result: MISMATCH (Expected: ['training', 'rehab', 'nutrition'], Actual: ['rehab'])
+----------------------------------------
+[adv-047] long_multipart
+Q: After a marathon, I want to transition back to strength training safely. My quads are extremely sore, and I have a slight IT band tightness. I also need to adjust my diet from high-carb fueling to a maintenance phase. Provide a phased approach: Phase 1 (Week 1-2): What are the recommended rehab and mobility protocols from *Rebuilding Milo* or similar for addressing post-marathon muscle soreness and IT band issues? Phase 2 (Week 3-4): How should I reintroduce barbell training (squat, deadlift) using regressions and progressive overload principles from foundational strength texts? Phase 3 (Nutrition): What is the textbook-guided process for reversing out of a carbohydrate-loading diet, adjusting macronutrients to support muscle repair and strength development without unnecessary weight gain?
+A: 根据您提供的参考资料《Rebuilding Milo》，书中内容主要围绕力量训练损伤的康复，并未专门针对马拉松后恢复制定分阶段计划，也未涉及具体的营养调整方案。因此，我将基于书中相关的康复原则，为您构建一个符合安全渐进逻辑的框架性计划，并明确指出哪些部分在参考资料中有依据，哪些没有。
+
+**重要前提**：马拉松后的肌肉酸痛（如股四头肌）和髂胫束紧张，通常属于**过度使用引起的慢性劳损或炎症**，而非急性损伤。处理原则与书中针对肌腱病的慢性管理思路有相通之处。
+
+---
+
+### **马拉松后安全恢复力量训练的分阶段计划框架**
+
+#### **第一阶段（第1-2周）：康复与活动度阶段**
+* ...
+  Result: MISMATCH (Expected: ['rehab', 'training', 'nutrition'], Actual: ['rehab'])
+----------------------------------------
+[adv-048] mixed_language
+Q: 作为一个篮球运动员，我在赛季中需要同时保持爆发力、敏捷性和避免伤病。我的脚踝有过旧伤。另外，密集的赛程让我很难管理体重和能量。请给出一个整合方案：第一，根据力量训练科学，在赛季中如何安排力量训练（频率、强度、动作选择）来维持力量而不影响场上表现？第二，根据康复知识，有哪些基于《Becoming a Supple Leopard》的日常脚踝稳定性和机动性练习？第三，根据运动营养学教材，在背靠背比赛的日子里，赛前、赛中、赛后的营养和水分补充的具体建议是什么？
+A: 根据您提供的参考资料《Rebuilding Milo》，**其中没有直接涉及**您所询问的以下具体方案：
+1.  赛季中维持爆发力与敏捷性的力量训练安排（频率、强度、动作选择）。
+2.  基于《Becoming a Supple Leopard》的脚踝旧伤稳定性与机动性康复练习。
+3.  背靠背比赛日（赛前、赛中、赛后）的营养与水分补充具体建议。
+
+**原因说明：**
+*   《Rebuilding Milo》一书主要聚焦于损伤后的康复原则、具体部位的康复练习以及部分训练哲学（如对被动治疗和赛前静态拉伸的看法），并未提供针对篮球运动员的完整赛季整合训练计划。
+*   您提到的《Becoming...
+  Result: MISMATCH (Expected: ['training', 'rehab', 'nutrition'], Actual: ['rehab'])
+----------------------------------------
+[adv-049] long_multipart
+Q: I'm analyzing the biomechanics of the Olympic snatch for a research project. I'm particularly interested in the transition from the first to the second pull. My literature review needs to cover: 1) The physiological demands of the snatch and how training adaptations for it align with or differ from general strength training principles as discussed in Zatsiorsky's work. 2) Common technical errors in the pull that lead to lumbar spine or shoulder injuries, and the corrective exercises or mobility drills recommended in modern rehab texts like those by Horschig or Starrett. 3) The unique nutritional considerations for an athlete training the snatch multiple times daily, focusing on nutrient timing for neural recovery and power output, as per sports nutrition science. This is a theoretical analysis, not personal advice.
+A: 根据您提供的参考资料，我无法回答您关于奥林匹克抓举的具体问题。
+
+**原因如下：**
+您上传的参考资料中：
+1.  **《Redis® Deep Dive》** 是一本关于数据库技术的书籍，与力量训练完全无关。
+2.  **《Scientific Principles of Strength Training》** 虽然是一本力量训练科学著作，但其提供的章节（第6章，第236页）仅讨论了“SRA（刺激-恢复-适应）原则的过度应用”这一通用训练学概念，并未涉及任何具体的奥林匹克举重技术分析、生物力学、损伤机制或针对举重项目的营养与恢复策略。
+
+**结论：**
+参考资料中缺乏与“奥林匹克抓举”技术...
+  Result: MISMATCH (Expected: ['training', 'rehab', 'nutrition'], Actual: ['training'])
+----------------------------------------
+[adv-050] long_multipart
+Q: My goal is to build a home gym training program for general fitness and resilience. I have a barbell, rack, and bench. I have no major injuries but sit at a desk all day. I also cook all my meals at home. I need a holistic guide covering: A detailed 4-day upper/lower split program utilizing progressive overload, explaining the rationale for exercise selection and set/rep schemes from fundamental strength training philosophy. A daily 10-minute mobility routine, compiled from key exercises in *Becoming a Supple Leopard*, targeting the hips, thoracic spine, and shoulders to counteract sitting. A simple, flexible meal-prepping framework based on sports nutrition plate-method guidelines, ensuring adequate protein and micronutrients for recovery and health, without requiring precise calorie counting.
+A: 根据您提供的参考资料，我无法回答您的问题。
+
+**原因如下：**
+1.  **训练计划制定**：您上传的《Scientific Principles of Strength Training》资料片段（第4章，P93）主要讨论了在接近最大可恢复训练量（MRV）时辅助动作的选择策略，并未涉及具体的4天分化训练计划设计、动作选择理由、组次安排或渐进超负荷的具体应用方法。参考资料中完全没有关于使用杠铃、深蹲架和卧推凳制定完整家庭健身计划的内容。
+2.  **灵活性训练**：您提到的《成为柔韧的豹子》一书并未包含在您本次上传的参考资料中。因此，我无法根据该书为您设计针对髋部、胸椎和肩部的10分钟日常灵...
+  Result: MISMATCH (Expected: ['training', 'rehab', 'nutrition'], Actual: ['training'])
+----------------------------------------
+
+Final Summary:
+  Passed: 9 | Failed: 41 | Errors: 0
+  Success Rate: 18.0%

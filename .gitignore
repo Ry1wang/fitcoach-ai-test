@@ -7,3 +7,8 @@ node_modules/
 test-results/
 playwright-report/
 blob-report/
+venv/
+.venv/
+fixtures/real_world/
+fixtures/stress/
+.aider.tags.cache.v4/

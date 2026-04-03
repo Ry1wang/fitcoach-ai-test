@@ -119,8 +119,8 @@ The `adversarial_queries.json` schema should be extended to include the label:
 | Set | Location | Tracking method | Access |
 |---|---|---|---|
 | Set A (synthetic) | `rag_eval/fixtures/` in repo | Git LFS | All team members via `git lfs pull` |
-| Set B (real-world) | `/opt/fitcoach-tests/fixtures/real_world/` on Mac Mini | Not in repo | Each team member must supply their own legally obtained copy |
-| Set C (stress) | `/opt/fitcoach-tests/fixtures/stress/` on Mac Mini | Synthetic files in repo via Git LFS; copyright files follow Set B policy | Synthetic files via `git lfs pull`; others self-supplied |
+| Set B (real-world) | `fixtures/real_world/` in repo | Git LFS | All team members via `git lfs pull` |
+| Set C (stress) | `fixtures/stress/` in repo | Git LFS | All team members via `git lfs pull` |
 
 **Git LFS setup (required once per machine):**
 
