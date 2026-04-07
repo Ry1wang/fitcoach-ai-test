@@ -187,4 +187,33 @@ async def test_training_agent_handles_llm_timeout():
 
 ---
 
+## [ISSUE-004] 移动端(375px)布局溢出，发送按钮超出视口
+
+**发现日期：** 2026-04-07  
+**影响范围：** `e2e/tests/responsive.spec.ts` — mobile (375×812) viewport  
+**严重程度：** 中（移动端用户无法直接点击发送按钮）  
+**状态：** 已记录，待前端修复
+
+### 现象
+
+Playwright 在 375×812 视口下登录后，`button:has-text("发送")` 的 `boundingBox` 显示：
+
+```
+x + width = 561px  （超出视口宽度 375px）
+```
+
+侧边栏（文档管理）与聊天区域并排布局，两者宽度之和超过 375px，导致聊天输入行被整体推到视口右侧不可见区域。
+
+**补充：** `scrollWidth > clientWidth` 检查未触发（CSS `overflow: hidden` 遮蔽了溢出），因此 "no horizontal scroll" 测试通过，但发送按钮实际无法点击。
+
+### 推荐修复方向
+
+在前端为侧边栏添加响应式断点（如 Tailwind `md:flex` + `hidden` on mobile），在窄屏下隐藏或折叠侧边栏，使聊天区域占满全屏。
+
+### 测试处理
+
+`responsive.spec.ts` 中该用例已标记 `test.fixme()`，不阻断 CI，直到前端完成响应式适配。
+
+---
+
 *此文件记录测试执行过程中发现的后端与测试脚本问题，供后续开发参考。*

@@ -1,0 +1,14 @@
+{
+  "name": "fitcoach-ai-e2e",
+  "version": "1.0.0",
+  "description": "Layer 5 — Playwright E2E tests for FitCoach AI",
+  "scripts": {
+    "test": "playwright test",
+    "test:headed": "playwright test --headed",
+    "test:debug": "playwright test --debug",
+    "codegen": "playwright codegen http://localhost"
+  },
+  "devDependencies": {
+    "@playwright/test": "^1.43.0"
+  }
+}
