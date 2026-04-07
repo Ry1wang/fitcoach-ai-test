@@ -1,0 +1,322 @@
+[
+  {
+    "id": "gd-training-001",
+    "question": "What is the low-bar squat position and why does it allow more weight to be lifted?",
+    "ground_truth": "In the low-bar squat, the bar rests on the rear deltoids below the spine of the scapula, approximately two inches lower than the high-bar position. This lower bar position moves the center of mass closer to the hip joint, which shortens the moment arm at the hip and increases the mechanical advantage of the posterior chain muscles (glutes and hamstrings), allowing heavier loads to be lifted compared to the high-bar position.",
+    "source_book": "Starting Strength",
+    "expected_agent": "training",
+    "domain": "training"
+  },
+  {
+    "id": "gd-training-002",
+    "question": "How does the novice linear progression work and how often should weight be added?",
+    "ground_truth": "In a novice linear progression, weight is added to the bar every training session, typically every 48 hours. Novice lifters can recover and adapt within this short timeframe because the training stress is not yet large enough to require longer recovery. The progression continues until the rate of adaptation slows and the lifter can no longer add weight every session, at which point they transition to intermediate programming.",
+    "source_book": "Starting Strength",
+    "expected_agent": "training",
+    "domain": "training"
+  },
+  {
+    "id": "gd-training-003",
+    "question": "What is hip drive in the squat and how is it executed?",
+    "ground_truth": "Hip drive refers to the upward movement of the hips out of the bottom position of the squat, initiated by the glutes and hamstrings before the back angle changes. To execute hip drive, the lifter focuses on driving the hips straight up first, which leverages the posterior chain rather than the quads. This technique is particularly important in the low-bar squat to engage the hip extensors maximally.",
+    "source_book": "Starting Strength",
+    "expected_agent": "training",
+    "domain": "training"
+  },
+  {
+    "id": "gd-training-004",
+    "question": "What is the correct setup for the overhead press?",
+    "ground_truth": "The overhead press begins with the bar resting on the front deltoids with a narrow grip, elbows slightly in front of the bar. The bar should be directly over the mid-foot, the same balance point used in the squat and deadlift. The lifter takes a breath, braces the trunk, and presses the bar overhead in a straight vertical line, moving the head slightly back to allow bar clearance and then forward once the bar passes the face.",
+    "source_book": "Starting Strength",
+    "expected_agent": "training",
+    "domain": "training"
+  },
+  {
+    "id": "gd-training-005",
+    "question": "What rep and set scheme does the Starting Strength program use for the main lifts?",
+    "ground_truth": "Starting Strength uses three sets of five repetitions (3×5) for the squat, press, and bench press, and one set of five repetitions (1×5) for the deadlift. The three working sets are performed across at the same weight. This rep-set scheme provides sufficient volume for novice adaptation while keeping training sessions manageable and allowing frequent training.",
+    "source_book": "Starting Strength",
+    "expected_agent": "training",
+    "domain": "training"
+  },
+  {
+    "id": "gd-training-006",
+    "question": "What is the principle of specificity in strength training?",
+    "ground_truth": "The principle of specificity states that training adaptations are specific to the type of stress applied. The body adapts to the precise demands placed on it — training at high intensities produces strength and neural adaptations, while training at moderate intensities with higher volumes produces hypertrophy. To improve a specific quality (maximal strength, endurance, power), the training must closely replicate the demands of that quality.",
+    "source_book": "Scientific Principles of Strength Training",
+    "expected_agent": "training",
+    "domain": "training"
+  },
+  {
+    "id": "gd-training-007",
+    "question": "What is the minimum effective volume and the maximum adaptive volume for a muscle group?",
+    "ground_truth": "Minimum effective volume (MEV) is the lowest amount of training volume that still produces measurable adaptation for a given muscle group — typically around 4 to 10 sets per week for most muscles in trained individuals. Maximum adaptive volume (MAV) is the highest volume a lifter can recover from and still make progress. Training above MAV results in overreaching without additional adaptation. Both thresholds are individual and shift as training experience increases.",
+    "source_book": "Scientific Principles of Strength Training",
+    "expected_agent": "training",
+    "domain": "training"
+  },
+  {
+    "id": "gd-training-008",
+    "question": "What is progressive overload and why is it necessary for continued strength gains?",
+    "ground_truth": "Progressive overload is the systematic increase in training stress over time — achieved by adding weight, reps, sets, or reducing rest periods. It is necessary because the body adapts to a given training stimulus and reaches a plateau if the stimulus does not increase. Without progressive overload, training becomes maintenance rather than a driver of new adaptation. The rate of progression slows as training experience increases.",
+    "source_book": "Scientific Principles of Strength Training",
+    "expected_agent": "training",
+    "domain": "training"
+  },
+  {
+    "id": "gd-training-009",
+    "question": "What are the recommended rest intervals between sets for strength versus hypertrophy training?",
+    "ground_truth": "For maximal strength development, rest intervals of 3 to 5 minutes between sets are recommended to allow full recovery of the ATP-PCr energy system and neuromuscular function. For hypertrophy, rest intervals of 1 to 2 minutes are commonly used, as the metabolic stress and muscle damage from shorter rests may contribute to hypertrophic signalling, though longer rests (2–3 min) have also been shown to support muscle growth.",
+    "source_book": "Scientific Principles of Strength Training",
+    "expected_agent": "training",
+    "domain": "training"
+  },
+  {
+    "id": "gd-training-010",
+    "question": "What is the hypertrophy rep range supported by the scientific literature?",
+    "ground_truth": "Research supports a broad hypertrophy rep range, with the most common prescription being 6 to 12 repetitions per set with loads of approximately 65–85% of one-rep max. However, studies have shown that hypertrophy can occur across a wide continuum (as low as 5 and as high as 30+ reps) provided sets are taken close to muscular failure. The 6–12 range is preferred because it balances mechanical tension, metabolic stress, and muscle damage.",
+    "source_book": "Scientific Principles of Strength Training",
+    "expected_agent": "training",
+    "domain": "training"
+  },
+  {
+    "id": "gd-training-011",
+    "question": "What is a deload and when should it be used?",
+    "ground_truth": "A deload is a planned reduction in training volume and/or intensity, typically lasting one week, intended to allow accumulated fatigue to dissipate and supercompensation to occur. Deloads are indicated when performance stalls, recovery is incomplete between sessions, or joint soreness accumulates. They are programmed periodically — every 4 to 8 weeks in most programs — rather than waited for until symptoms of overtraining appear.",
+    "source_book": "Scientific Principles of Strength Training",
+    "expected_agent": "training",
+    "domain": "training"
+  },
+  {
+    "id": "gd-training-012",
+    "question": "What is block periodization and how does it differ from concurrent periodization?",
+    "ground_truth": "Block periodization organises training into sequential phases (accumulation, transmutation, realisation), each with a dominant training focus. Qualities developed in earlier blocks are maintained while new qualities are developed, building to a performance peak. Concurrent periodization trains multiple qualities simultaneously throughout the training year. Block periodization is typically superior for advanced lifters who have difficulty recovering from high volumes of simultaneous stimuli.",
+    "source_book": "Scientific Principles of Strength Training",
+    "expected_agent": "training",
+    "domain": "training"
+  },
+  {
+    "id": "gd-training-013",
+    "question": "What is Rate of Perceived Exertion (RPE) and how is it used in autoregulation?",
+    "ground_truth": "RPE in resistance training uses a modified Borg scale from 1 to 10, where RPE 10 represents maximum effort with no reps remaining (technical failure) and RPE 8 means two reps remain in reserve. Autoregulation uses daily RPE targets instead of fixed percentages to adjust training load based on daily readiness. On a day when the lifter feels fatigued, a target RPE may be reached at a lower absolute weight, preventing overreaching.",
+    "source_book": "Scientific Principles of Strength Training",
+    "expected_agent": "training",
+    "domain": "training"
+  },
+  {
+    "id": "gd-training-014",
+    "question": "How should compound and isolation exercises be ordered within a training session?",
+    "ground_truth": "Compound multi-joint exercises (squat, deadlift, bench press, overhead press) should be performed first in a training session when the lifter is freshest and neuromuscular fatigue is lowest. Isolation exercises (curls, lateral raises, leg extensions) are performed after compounds, as they are less technically demanding and contribute less to overall fatigue. Placing isolation work first would impair performance on the primary movements.",
+    "source_book": "Scientific Principles of Strength Training",
+    "expected_agent": "training",
+    "domain": "training"
+  },
+  {
+    "id": "gd-rehab-001",
+    "question": "What is the pain monitoring model and what levels of pain are acceptable during rehabilitation?",
+    "ground_truth": "The pain monitoring model uses a 0 to 10 numeric rating scale where 0 is no pain and 10 is worst imaginable pain. During rehabilitation exercise, pain at or below 3 out of 10 is generally considered acceptable and does not indicate tissue damage. Pain that subsides within 24 hours after training and does not worsen over successive sessions is a sign that the loading is appropriate. Pain above 4–5 warrants load reduction or exercise modification.",
+    "source_book": "Rebuilding Milo",
+    "expected_agent": "rehab",
+    "domain": "rehab"
+  },
+  {
+    "id": "gd-rehab-002",
+    "question": "What causes butt wink in the squat and what are the contributing factors?",
+    "ground_truth": "Butt wink — posterior pelvic tilt at the bottom of the squat — can result from three main factors: limited hip flexion mobility (hip capsule tightness), limited ankle dorsiflexion restricting the shin angle, or individual bony anatomy of the hip joint (femoral acetabular morphology). Anatomical causes cannot be fixed with mobility work, while mobility restrictions can be addressed through targeted stretching and movement preparation.",
+    "source_book": "Rebuilding Milo",
+    "expected_agent": "rehab",
+    "domain": "rehab"
+  },
+  {
+    "id": "gd-rehab-003",
+    "question": "What are the common causes of knee valgus during the squat and how is it addressed?",
+    "ground_truth": "Knee valgus (knees collapsing inward) during the squat is commonly caused by weakness of the hip abductors and external rotators (primarily the gluteus medius), combined with tightness of the hip adductors. It can also result from excessive pronation at the foot. Correction involves strengthening the glutes through targeted exercises (banded squats, clamshells, hip thrusts), cueing the knees to track over the toes, and addressing foot mechanics.",
+    "source_book": "Rebuilding Milo",
+    "expected_agent": "rehab",
+    "domain": "rehab"
+  },
+  {
+    "id": "gd-rehab-004",
+    "question": "What is patellar tendinopathy and how is it managed during continued training?",
+    "ground_truth": "Patellar tendinopathy is a chronic degeneration of the patellar tendon characterised by pain localised to the inferior pole of the patella, worsened by loading activities like squatting and jumping. Management involves progressive tendon loading using isometric and isotonic exercises rather than complete rest. Heavy slow resistance training (3–4 sets of 8–15 reps at high load) has strong evidence for pain reduction and tendon remodelling. Training is modified rather than stopped.",
+    "source_book": "Rebuilding Milo",
+    "expected_agent": "rehab",
+    "domain": "rehab"
+  },
+  {
+    "id": "gd-rehab-005",
+    "question": "How is hip impingement identified during the squat and what are typical management strategies?",
+    "ground_truth": "Femoroacetabular impingement (FAI) in the squat presents as anterior hip or groin pain at the end range of hip flexion, typically reproduced by the FADIR test (flexion, adduction, internal rotation). Management involves modifying squat depth and stance width to work within a pain-free range, hip capsule mobilisation techniques, and targeted strengthening of the hip musculature. Bony anatomy may ultimately limit improvement.",
+    "source_book": "Rebuilding Milo",
+    "expected_agent": "rehab",
+    "domain": "rehab"
+  },
+  {
+    "id": "gd-rehab-006",
+    "question": "What is the difference between a tendinitis and a tendinopathy and why does it matter for treatment?",
+    "ground_truth": "Tendinitis refers to acute tendon inflammation with a true inflammatory response, typically occurring in the early days after injury. Tendinopathy is a chronic degeneration of tendon collagen structure without significant inflammation, characterised by disorganised fibres and neovascularisation. This distinction matters because anti-inflammatory treatments (ice, NSAIDs) may help acute tendinitis but are ineffective for tendinopathy, which requires progressive mechanical loading to stimulate collagen remodelling.",
+    "source_book": "Rebuilding Milo",
+    "expected_agent": "rehab",
+    "domain": "rehab"
+  },
+  {
+    "id": "gd-rehab-007",
+    "question": "How should training be modified rather than stopped when managing an injury?",
+    "ground_truth": "Complete rest is rarely the optimal response to musculoskeletal injury. The preferred approach is modified loading: identify movements that are pain-free or within acceptable pain levels (0–3/10), reduce load and range of motion to a tolerable level, and progressively increase them over time. Continued loading within pain limits maintains tendon and muscle health, prevents deconditioning, and speeds return to full training compared with complete rest.",
+    "source_book": "Rebuilding Milo",
+    "expected_agent": "rehab",
+    "domain": "rehab"
+  },
+  {
+    "id": "gd-rehab-008",
+    "question": "What is the McGill Big 3 and what does each exercise target?",
+    "ground_truth": "The McGill Big 3 is a spine rehabilitation protocol consisting of three exercises: (1) the curl-up, which activates the rectus abdominis while minimising lumbar flexion stress; (2) the side bridge (side plank), which targets the quadratus lumborum and obliques; and (3) the bird-dog, which co-activates the erector spinae and contralateral gluteus medius. Together they build anti-flexion, anti-lateral flexion, and anti-rotation endurance of the lumbar spine stabilisers.",
+    "source_book": "Rebuilding Milo",
+    "expected_agent": "rehab",
+    "domain": "rehab"
+  },
+  {
+    "id": "gd-rehab-009",
+    "question": "How does limited ankle dorsiflexion affect squat mechanics?",
+    "ground_truth": "Limited ankle dorsiflexion restricts how far the shin can travel forward over the foot during the squat descent. To compensate, lifters typically either rise onto their heels (losing balance and base), adopt a wider stance, or excessively anteriorly tilt the pelvis and flex the lumbar spine. These compensations increase lower back stress. Addressing ankle dorsiflexion with mobilisation drills or heel elevation can immediately improve squat mechanics.",
+    "source_book": "Rebuilding Milo",
+    "expected_agent": "rehab",
+    "domain": "rehab"
+  },
+  {
+    "id": "gd-rehab-010",
+    "question": "What are the criteria for returning to full barbell training after a lower back injury?",
+    "ground_truth": "Return to full barbell training after lower back injury requires: (1) pain at or below 2/10 during all planned movements; (2) no pain increase in the 24 hours following a training session; (3) restoration of adequate hip and thoracic mobility; (4) sufficient lumbar stabiliser endurance demonstrated by passing tests such as the McGill endurance battery; and (5) progressive load tolerance established through graded return-to-lifting protocols over several weeks.",
+    "source_book": "Rebuilding Milo",
+    "expected_agent": "rehab",
+    "domain": "rehab"
+  },
+  {
+    "id": "gd-rehab-011",
+    "question": "What is the typical mechanism of ACL injury and what are key considerations during rehabilitation?",
+    "ground_truth": "ACL injury most commonly occurs through a non-contact deceleration mechanism — landing from a jump or cutting with the knee in valgus and near extension. Rehabilitation after ACL reconstruction focuses on restoring quad strength (limb symmetry index ≥ 90% before return to sport), neuromuscular control, proprioception, and sport-specific movement patterns. Psychological readiness is also an important return-to-sport criterion alongside physical benchmarks.",
+    "source_book": "Rebuilding Milo",
+    "expected_agent": "rehab",
+    "domain": "rehab"
+  },
+  {
+    "id": "gd-rehab-012",
+    "question": "How should thoracic spine mobility be addressed for overhead pressing?",
+    "ground_truth": "Poor thoracic extension limits the ability to position the bar overhead with a neutral spine, forcing excessive lumbar extension to compensate. Thoracic spine mobilisation includes foam roller extensions over a foam roller, thoracic rotation stretches, and quadruped thoracic rotation drills. Regular mobility work targeting T4–T8 extension and rotation improves overhead press mechanics and reduces shoulder impingement risk.",
+    "source_book": "Rebuilding Milo",
+    "expected_agent": "rehab",
+    "domain": "rehab"
+  },
+  {
+    "id": "gd-rehab-013",
+    "question": "What distinguishes muscular lower back pain from disc-related pain and how does each present?",
+    "ground_truth": "Muscular lower back pain typically presents as a diffuse ache localised to the lumbar region, often worse with sustained positions (prolonged sitting or standing) and relieved by movement. Disc-related pain may involve radiating pain into the buttock or leg (sciatica), neurological symptoms (numbness, tingling, weakness), and is often provoked by lumbar flexion loading. Centralisation of symptoms with extension movements is a positive indicator for a disc-related mechanism responsive to McKenzie treatment.",
+    "source_book": "Rebuilding Milo",
+    "expected_agent": "rehab",
+    "domain": "rehab"
+  },
+  {
+    "id": "gd-nutrition-001",
+    "question": "What is the recommended daily protein intake for strength and power athletes?",
+    "ground_truth": "Current research recommends 1.6 to 2.2 grams of protein per kilogram of body weight per day for strength and power athletes seeking to maximise muscle protein synthesis and support training adaptations. Intakes at the higher end (2.2 g/kg) may be warranted during periods of caloric restriction to preserve lean mass. Protein distribution across 3 to 5 meals of 20–40 g each maximises the muscle protein synthesis response.",
+    "source_book": "Foods and Nutrition for Sports Performance",
+    "expected_agent": "nutrition",
+    "domain": "nutrition"
+  },
+  {
+    "id": "gd-nutrition-002",
+    "question": "What is the role of carbohydrates in fuelling strength training?",
+    "ground_truth": "Carbohydrates are the primary fuel for high-intensity anaerobic exercise such as heavy strength training. They are stored as glycogen in the muscle and liver and converted to glucose for ATP production during intense efforts. While a single strength training session does not fully deplete glycogen, adequate carbohydrate intake supports training volume, maintains performance across multiple sets, and accelerates recovery. Recommendations for strength athletes range from 3 to 5 g/kg/day.",
+    "source_book": "Foods and Nutrition for Sports Performance",
+    "expected_agent": "nutrition",
+    "domain": "nutrition"
+  },
+  {
+    "id": "gd-nutrition-003",
+    "question": "What is the optimal timing and composition of a pre-workout meal?",
+    "ground_truth": "A pre-workout meal consumed 2 to 4 hours before training should contain moderate carbohydrates (1–2 g/kg), adequate protein (20–40 g), and low fat and fibre to reduce gastrointestinal distress. Closer to training (30–60 minutes before), a smaller, easily digestible carbohydrate and protein snack can top up glycogen and amino acid availability. The goal is to begin training in a fed but not overly full state.",
+    "source_book": "Foods and Nutrition for Sports Performance",
+    "expected_agent": "nutrition",
+    "domain": "nutrition"
+  },
+  {
+    "id": "gd-nutrition-004",
+    "question": "How does post-workout nutrition support muscle recovery and what is the timing window?",
+    "ground_truth": "Post-workout nutrition should include 20 to 40 grams of high-quality protein to maximise muscle protein synthesis and 0.8 to 1.2 g/kg of carbohydrate to begin glycogen replenishment. Consuming protein within 30 to 60 minutes after training takes advantage of elevated muscle protein synthesis rates immediately post-exercise. However, research suggests that the total daily protein intake matters more than precise timing for most athletes who train in a fed state.",
+    "source_book": "Foods and Nutrition for Sports Performance",
+    "expected_agent": "nutrition",
+    "domain": "nutrition"
+  },
+  {
+    "id": "gd-nutrition-005",
+    "question": "What is the evidence for creatine monohydrate supplementation and what is the standard dosing protocol?",
+    "ground_truth": "Creatine monohydrate is one of the most extensively researched and effective ergogenic supplements. It increases phosphocreatine stores in muscle, enhancing ATP regeneration during short, high-intensity efforts. A loading protocol of 20 grams per day divided into four doses for 5 to 7 days followed by a maintenance dose of 3 to 5 grams per day rapidly saturates muscle creatine. An alternative is 3 to 5 grams per day without loading, reaching the same saturation in 3 to 4 weeks.",
+    "source_book": "Foods and Nutrition for Sports Performance",
+    "expected_agent": "nutrition",
+    "domain": "nutrition"
+  },
+  {
+    "id": "gd-nutrition-006",
+    "question": "What does the evidence say about branched-chain amino acid (BCAA) supplementation for trained athletes?",
+    "ground_truth": "BCAAs (leucine, isoleucine, valine) stimulate muscle protein synthesis pathways, particularly through leucine's activation of mTOR signalling. However, when total daily protein intake is sufficient (≥1.6 g/kg/day) from complete protein sources, additional BCAA supplementation provides minimal additional benefit for muscle protein synthesis. BCAAs may have modest utility for athletes training in a fasted state or with low total protein intake, but are largely redundant with adequate dietary protein.",
+    "source_book": "Foods and Nutrition for Sports Performance",
+    "expected_agent": "nutrition",
+    "domain": "nutrition"
+  },
+  {
+    "id": "gd-nutrition-007",
+    "question": "How does caffeine affect athletic performance and what is the recommended dose?",
+    "ground_truth": "Caffeine is an effective ergogenic aid that improves both endurance and strength performance by blocking adenosine receptors, reducing perceived exertion, and enhancing neuromuscular function. The recommended dose for performance enhancement is 3 to 6 milligrams per kilogram of body weight, consumed 30 to 60 minutes before exercise. Habitual caffeine users may experience reduced ergogenic effect due to tolerance, and timing intake to minimise sleep disruption is important.",
+    "source_book": "Foods and Nutrition for Sports Performance",
+    "expected_agent": "nutrition",
+    "domain": "nutrition"
+  },
+  {
+    "id": "gd-nutrition-008",
+    "question": "What is the minimum fat intake recommended for athletes and why is fat intake important for performance?",
+    "ground_truth": "Athletes should consume a minimum of 20 to 35 percent of total calories from dietary fat. Dietary fat is essential for the production of steroid hormones including testosterone and oestrogen, for the absorption of fat-soluble vitamins (A, D, E, K), and for the integrity of cell membranes. Restricting fat intake below 20% of calories can impair hormonal function, particularly testosterone production in strength athletes, and negatively affect recovery and adaptation.",
+    "source_book": "Foods and Nutrition for Sports Performance",
+    "expected_agent": "nutrition",
+    "domain": "nutrition"
+  },
+  {
+    "id": "gd-nutrition-009",
+    "question": "How does dehydration affect strength training performance?",
+    "ground_truth": "A loss of 2% or more of body weight through sweat during exercise leads to measurable impairments in strength, power output, and cognitive function. Even mild dehydration (1–2% body weight) can impair performance in prolonged or high-volume training sessions. Athletes should drink approximately 500 mL of fluid in the 2 hours before training and aim to prevent sweat losses exceeding 2% of body weight during sessions.",
+    "source_book": "Foods and Nutrition for Sports Performance",
+    "expected_agent": "nutrition",
+    "domain": "nutrition"
+  },
+  {
+    "id": "gd-nutrition-010",
+    "question": "What caloric surplus is recommended for maximising muscle gain while minimising fat gain?",
+    "ground_truth": "A moderate caloric surplus of approximately 200 to 500 kilocalories per day above total daily energy expenditure is recommended for lean muscle gain. Larger surpluses do not result in proportionally greater muscle gain but do accelerate fat accumulation. The rate of muscle gain for natural, trained athletes is inherently limited (approximately 0.5–1 kg per month under optimal conditions), so very large surpluses primarily increase fat mass.",
+    "source_book": "Foods and Nutrition for Sports Performance",
+    "expected_agent": "nutrition",
+    "domain": "nutrition"
+  },
+  {
+    "id": "gd-nutrition-011",
+    "question": "What is the role of beta-alanine supplementation and which training contexts benefit most?",
+    "ground_truth": "Beta-alanine is a precursor to carnosine, an intramuscular buffer that delays acidosis during high-intensity exercise. Supplementation with 3.2 to 6.4 grams per day over 4 to 6 weeks increases muscle carnosine by 40 to 80%. Performance benefits are most pronounced in efforts lasting 60 to 240 seconds (e.g. repeated sprints, circuit training, high-rep sets) and are minimal for activities shorter than 60 seconds (maximal strength) or longer than 4 minutes (aerobic endurance).",
+    "source_book": "Foods and Nutrition for Sports Performance",
+    "expected_agent": "nutrition",
+    "domain": "nutrition"
+  },
+  {
+    "id": "gd-nutrition-012",
+    "question": "How long does full muscle glycogen replenishment take after exercise and what nutrition supports it?",
+    "ground_truth": "Complete muscle glycogen replenishment after glycogen-depleting exercise typically takes 24 to 48 hours when carbohydrate intake is adequate (8–10 g/kg/day for athletes with depleted stores). The rate is fastest in the first 30 to 60 minutes post-exercise when glycogen synthase activity is highest. Consuming 1.0 to 1.2 g/kg of rapidly digested carbohydrates (glucose-based) immediately post-exercise maximises early glycogen resynthesis.",
+    "source_book": "Foods and Nutrition for Sports Performance",
+    "expected_agent": "nutrition",
+    "domain": "nutrition"
+  },
+  {
+    "id": "gd-nutrition-013",
+    "question": "What does the evidence show about the ketogenic diet for strength training performance?",
+    "ground_truth": "The ketogenic diet (very low carbohydrate, high fat) consistently impairs performance in high-intensity, glycolytic exercise such as maximal strength training and repeated power efforts. During adaptation (first 2–4 weeks), performance decrements are most pronounced. Some studies show partial restoration of performance after full keto-adaptation, but no study has demonstrated that a ketogenic diet matches carbohydrate-based nutrition for maximal strength or hypertrophy outcomes. Fat is an inefficient fuel for anaerobic exercise.",
+    "source_book": "Foods and Nutrition for Sports Performance",
+    "expected_agent": "nutrition",
+    "domain": "nutrition"
+  }
+]

@@ -1,0 +1,30 @@
+{
+  "_comment": "Layer 2 RAG quality thresholds. Enforced values are set at baseline-5pp after first calibration run. See TestPlan §5 Layer 2 for calibration process.",
+  "version": "1.0",
+  "calibrated": true,
+  "calibration_date": "2026-04-07",
+  "baseline_scores": {
+    "answer_correctness": 0.4988,
+    "answer_relevancy": 0.4666
+  },
+  "calibration_note": "Run: python rag_eval/eval_runner.py --calibrate  to measure baseline and set enforced thresholds at baseline-5pp per metric.",
+  "targets": {
+    "_comment": "Long-term targets from TestPlan. Tighten enforced values toward these quarterly.",
+    "answer_correctness": 0.7,
+    "answer_relevancy": 0.75,
+    "faithfulness": 0.8,
+    "context_precision": 0.7,
+    "context_recall": 0.65
+  },
+  "enforced": {
+    "answer_correctness": 0.4488,
+    "answer_relevancy": 0.4166
+  },
+  "context_metrics_enforced": {
+    "_comment": "Activated only when the FitCoach API exposes retrieved_contexts in the SSE done event. Currently disabled — context_metrics_active=false.",
+    "context_metrics_active": false,
+    "faithfulness": 0.7,
+    "context_precision": 0.6,
+    "context_recall": 0.55
+  }
+}
