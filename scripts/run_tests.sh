@@ -42,20 +42,38 @@ pytest api/ \
   || OVERALL_EXIT=1
 
 # ---------------------------------------------------------------------------
-# Layer 3 — Router Accuracy Tests (always run)
+# Layer 3 — Router Accuracy Tests
+#   Pre-merge / default: smoke only (fast, not slow)
+#   Full run (--layers all or --layers 3): full 105-query accuracy suite
 # ---------------------------------------------------------------------------
 if [ -d "router_accuracy" ] && ls router_accuracy/test_*.py &>/dev/null 2>&1; then
-  echo ""
-  echo "[Layer 3] Router Accuracy Tests..."
-  pytest router_accuracy/ \
-    --base-url="$BASE_URL" \
-    --json-report \
-    --json-report-file="$REPORT_DIR/l3_${TIMESTAMP}.json" \
-    --html="$REPORT_DIR/l3_${TIMESTAMP}.html" \
-    --self-contained-html \
-    --tb=short \
-    -v \
-    || OVERALL_EXIT=1
+  if [[ "$LAYERS" == "all" || "$LAYERS" == *"3"* ]]; then
+    echo ""
+    echo "[Layer 3] Router Accuracy Tests (full — 105 queries)..."
+    pytest router_accuracy/ \
+      --base-url="$BASE_URL" \
+      -m "layer3" \
+      --json-report \
+      --json-report-file="$REPORT_DIR/l3_${TIMESTAMP}.json" \
+      --html="$REPORT_DIR/l3_${TIMESTAMP}.html" \
+      --self-contained-html \
+      --tb=short \
+      -v -s \
+      || OVERALL_EXIT=1
+  else
+    echo ""
+    echo "[Layer 3] Router Accuracy Tests (smoke only)..."
+    pytest router_accuracy/ \
+      --base-url="$BASE_URL" \
+      -m "layer3 and not slow" \
+      --json-report \
+      --json-report-file="$REPORT_DIR/l3_smoke_${TIMESTAMP}.json" \
+      --html="$REPORT_DIR/l3_smoke_${TIMESTAMP}.html" \
+      --self-contained-html \
+      --tb=short \
+      -v \
+      || OVERALL_EXIT=1
+  fi
 else
   echo "[Layer 3] Skipped — no test files in router_accuracy/ yet."
 fi

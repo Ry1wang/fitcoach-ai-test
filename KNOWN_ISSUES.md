@@ -90,4 +90,101 @@ curl -X DELETE http://localhost/api/v1/documents/<DOC_ID> \
 
 ---
 
+## [ISSUE-002] 连续 Layer 3 测试运行触发后端 429 限流，导致 accuracy 虚低
+
+**发现日期：** 2026-04-07  
+**影响范围：** Layer 3 router accuracy 全量测试（105+ 条查询连续执行）  
+**严重程度：** 高（导致测试结果不可信）  
+**状态：** 已有规避方案，根本原因待后端修复
+
+### 现象
+
+Layer 3 全量测试第一次运行（105 条）约耗时 19 分钟，全部通过。
+紧接着重新运行时，105 条查询中有 105 条立即返回 **HTTP 429 Too Many Requests**，
+仅 15 条（Redis 缓存命中的 training 类查询）返回正常结果。
+总耗时约 0.74 秒——看似飞速完成，实为大量请求被拒绝。
+
+最终结果：
+- accuracy = 15/105 = **14.3%**（远低于 90% 阈值，测试正确 FAIL）
+- cross_domain acceptance_rate = 0/15 = **0%**
+
+### 根本原因
+
+后端对 LLM 调用没有针对测试场景的速率保护。连续 105 次查询耗尽了
+底层 LLM API（或后端自身）的请求配额。限流窗口期内再次运行会立即失败。
+
+附加发现：Redis 缓存使得部分相同查询在限流期间仍能命中缓存返回结果，
+说明 Redis session cache 对相同 query 是共享的——存在跨请求 context 污染风险，
+需要进一步确认缓存 key 设计是否安全。
+
+### 规避方案
+
+**在两次全量 Layer 3 测试之间等待足够时长（根据 LLM 提供商的限流窗口，通常为 60 秒到数分钟）。**
+
+`run_layer3_tests.sh` 已可通过 `--smoke` 模式只运行 5 条核心查询（不触发限流）：
+
+```bash
+./scripts/run_layer3_tests.sh --smoke    # 只跑 5 条，约 1 分钟
+./scripts/run_layer3_tests.sh            # 全量，需确保距上次运行有足够间隔
+```
+
+### 推荐的根本修复方向
+
+| 方案 | 说明 | 复杂度 |
+|---|---|---|
+| 查询间加延迟 | 在 `routing_results` fixture 的每次请求之间加 `time.sleep(0.5~1s)` | 低（测试侧修复） |
+| 后端提升 LLM 调用限流配额 | 联系 LLM 提供商提升 RPM/TPM 限额 | 低（配置变更） |
+| 后端添加请求队列 | 对 LLM 调用做排队和限速，避免突发并发耗尽配额 | 中 |
+| 测试侧使用独立 API key | 为测试环境配置独立的 LLM API key，与生产隔离 | 低 |
+
+---
+
+## [ISSUE-003] Agent degradation testing 的 LLM mock 场景无法从外部测试套件覆盖
+
+**发现日期：** 2026-04-07  
+**影响范围：** Layer 3 Agent degradation testing  
+**严重程度：** 低（测试覆盖缺口，不影响生产功能）  
+**状态：** 已知缺口，需后端单元测试补充
+
+### 现象
+
+TestPlan §5 Layer 3 要求测试每个 specialist agent 在以下 LLM 退化场景下的行为：
+- LLM 返回空字符串
+- LLM API 超时
+- LLM 返回格式错误的 JSON
+
+由于测试套件与应用代码分离（独立仓库），无法在测试执行时注入 mock LLM 响应。
+`test_agent_degradation.py` 只能从 API 外部观测 agent 行为，无法直接触发以上场景。
+
+### 已覆盖的替代测试
+
+`router_accuracy/test_agent_degradation.py` 通过以下方式间接验证降级行为：
+- 语料库外查询（out-of-corpus）：RAG 返回空 context，接近"LLM 无信息可用"场景
+- SSE stream 格式验证：确认每个 agent 的响应结构符合规范
+- 客户端中断（client abort）：验证服务器在连接意外关闭后能正常处理后续请求
+- 近空查询：单字符/纯空格输入，不引发 5xx
+
+### 推荐修复方向
+
+在后端代码库（`fitcoach-ai`）中为每个 specialist agent 添加单元测试：
+
+```python
+# 示例：backend unit test (not in this repo)
+from unittest.mock import AsyncMock, patch
+
+async def test_training_agent_handles_empty_llm_response():
+    with patch("app.agents.training.llm.ainvoke", return_value=AsyncMock(content="")):
+        result = await training_agent.run("How do I squat?", context=[])
+    assert result["answer"] == ""  # or a fallback message
+    assert result["agent_used"] == "training"
+    # Must NOT raise an unhandled exception
+
+async def test_training_agent_handles_llm_timeout():
+    with patch("app.agents.training.llm.ainvoke", side_effect=TimeoutError):
+        result = await training_agent.run("How do I squat?", context=[])
+    assert "error" in result or result["answer"]  # graceful fallback
+```
+
+---
+
 *此文件记录测试执行过程中发现的后端与测试脚本问题，供后续开发参考。*

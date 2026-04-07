@@ -1,0 +1,944 @@
+[
+  {
+    "id": "lq-001",
+    "query": "What is the correct bar position for a low-bar back squat?",
+    "expected_agent": "training",
+    "difficulty": "easy",
+    "notes": "Classic training technique question, unambiguous domain"
+  },
+  {
+    "id": "lq-002",
+    "query": "How many sets and reps should I do each week to build maximum strength?",
+    "expected_agent": "training",
+    "difficulty": "easy",
+    "notes": "Programming fundamentals, clear training domain"
+  },
+  {
+    "id": "lq-003",
+    "query": "What is the difference between linear progression and periodization?",
+    "expected_agent": "training",
+    "difficulty": "easy",
+    "notes": "Training programming concept"
+  },
+  {
+    "id": "lq-004",
+    "query": "How do I properly set up for a conventional deadlift?",
+    "expected_agent": "training",
+    "difficulty": "easy",
+    "notes": "Technique question"
+  },
+  {
+    "id": "lq-005",
+    "query": "What rep range is most effective for hypertrophy?",
+    "expected_agent": "training",
+    "difficulty": "easy",
+    "notes": "Classic hypertrophy programming question"
+  },
+  {
+    "id": "lq-006",
+    "query": "How should I structure a 5-day training week for powerlifting?",
+    "expected_agent": "training",
+    "difficulty": "easy",
+    "notes": "Program design"
+  },
+  {
+    "id": "lq-007",
+    "query": "What is a deload week and when should I take one?",
+    "expected_agent": "training",
+    "difficulty": "easy",
+    "notes": "Programming concept"
+  },
+  {
+    "id": "lq-008",
+    "query": "How do I calculate my one-rep max from a set of 5?",
+    "expected_agent": "training",
+    "difficulty": "easy",
+    "notes": "Strength calculation, training domain"
+  },
+  {
+    "id": "lq-009",
+    "query": "What is RPE and how do I use it to autoregulate training?",
+    "expected_agent": "training",
+    "difficulty": "medium",
+    "notes": "Training concept, RPE-based programming"
+  },
+  {
+    "id": "lq-010",
+    "query": "Should I use a belt for squats and deadlifts, and at what weights?",
+    "expected_agent": "training",
+    "difficulty": "medium",
+    "notes": "Equipment and technique question"
+  },
+  {
+    "id": "lq-011",
+    "query": "What is the conjugate method and how does it differ from linear programming?",
+    "expected_agent": "training",
+    "difficulty": "medium",
+    "notes": "Advanced programming concept"
+  },
+  {
+    "id": "lq-012",
+    "query": "How should I warm up before a heavy squat session?",
+    "expected_agent": "training",
+    "difficulty": "easy",
+    "notes": "Training preparation, warm-up protocol"
+  },
+  {
+    "id": "lq-013",
+    "query": "What is the hip hinge movement pattern and why is it important for deadlifts?",
+    "expected_agent": "training",
+    "difficulty": "easy",
+    "notes": "Movement mechanics for training"
+  },
+  {
+    "id": "lq-014",
+    "query": "How do I program squat, bench, and deadlift in a 3-day full-body routine?",
+    "expected_agent": "training",
+    "difficulty": "medium",
+    "notes": "Full program design question"
+  },
+  {
+    "id": "lq-015",
+    "query": "What is volume accumulation and how does it drive strength gains?",
+    "expected_agent": "training",
+    "difficulty": "medium",
+    "notes": "Training theory"
+  },
+  {
+    "id": "lq-016",
+    "query": "How do I fix my squat depth — my hips don't go below parallel?",
+    "expected_agent": "training",
+    "difficulty": "medium",
+    "notes": "Technique correction; mobility could be rehab adjacent but framed as training problem"
+  },
+  {
+    "id": "lq-017",
+    "query": "What is rate of force development and how can I train for it?",
+    "expected_agent": "training",
+    "difficulty": "hard",
+    "notes": "Sports science concept, training domain"
+  },
+  {
+    "id": "lq-018",
+    "query": "How should I periodize training for a powerlifting meet 16 weeks away?",
+    "expected_agent": "training",
+    "difficulty": "medium",
+    "notes": "Competition prep programming"
+  },
+  {
+    "id": "lq-019",
+    "query": "What are the main differences between high-bar and low-bar squatting?",
+    "expected_agent": "training",
+    "difficulty": "easy",
+    "notes": "Technique comparison question"
+  },
+  {
+    "id": "lq-020",
+    "query": "How many days per week should a beginner lift weights?",
+    "expected_agent": "training",
+    "difficulty": "easy",
+    "notes": "Basic programming for beginners"
+  },
+  {
+    "id": "lq-021",
+    "query": "What accessory exercises complement the big three lifts?",
+    "expected_agent": "training",
+    "difficulty": "easy",
+    "notes": "Accessory programming"
+  },
+  {
+    "id": "lq-022",
+    "query": "How do I progress when I stall on my linear progression?",
+    "expected_agent": "training",
+    "difficulty": "medium",
+    "notes": "Intermediate programming strategy"
+  },
+  {
+    "id": "lq-023",
+    "query": "What is intensity in the context of strength training?",
+    "expected_agent": "training",
+    "difficulty": "easy",
+    "notes": "Training terminology"
+  },
+  {
+    "id": "lq-024",
+    "query": "Should I squat to a box or use full range of motion for hypertrophy?",
+    "expected_agent": "training",
+    "difficulty": "medium",
+    "notes": "Training technique question"
+  },
+  {
+    "id": "lq-025",
+    "query": "How do I build a training block to improve my overhead press?",
+    "expected_agent": "training",
+    "difficulty": "medium",
+    "notes": "Specific lift improvement programming"
+  },
+  {
+    "id": "lq-026",
+    "query": "What is supercompensation and how does it apply to programming?",
+    "expected_agent": "training",
+    "difficulty": "hard",
+    "notes": "Advanced training theory"
+  },
+  {
+    "id": "lq-027",
+    "query": "How should I set up the bench press to maximize leg drive?",
+    "expected_agent": "training",
+    "difficulty": "medium",
+    "notes": "Technique optimization"
+  },
+  {
+    "id": "lq-028",
+    "query": "What is the novice effect and how long does it last?",
+    "expected_agent": "training",
+    "difficulty": "easy",
+    "notes": "Training adaptation concept"
+  },
+  {
+    "id": "lq-029",
+    "query": "How do I train around a busy schedule with only 3 hours per week?",
+    "expected_agent": "training",
+    "difficulty": "medium",
+    "notes": "Time-constrained programming"
+  },
+  {
+    "id": "lq-030",
+    "query": "What is specificity in strength training and why does it matter?",
+    "expected_agent": "training",
+    "difficulty": "medium",
+    "notes": "Training principle"
+  },
+  {
+    "id": "lq-031",
+    "query": "How do I use double progression for accessory work?",
+    "expected_agent": "training",
+    "difficulty": "medium",
+    "notes": "Rep/set progression method"
+  },
+  {
+    "id": "lq-032",
+    "query": "What is muscle fiber type and how does it affect training response?",
+    "expected_agent": "training",
+    "difficulty": "hard",
+    "notes": "Physiology applied to training"
+  },
+  {
+    "id": "lq-033",
+    "query": "How long should rest periods be between heavy sets?",
+    "expected_agent": "training",
+    "difficulty": "easy",
+    "notes": "Basic training variable"
+  },
+  {
+    "id": "lq-034",
+    "query": "What is the starting strength novice program and how does it work?",
+    "expected_agent": "training",
+    "difficulty": "easy",
+    "notes": "Specific program reference in corpus"
+  },
+  {
+    "id": "lq-035",
+    "query": "How do I peak my lifts the week before a competition?",
+    "expected_agent": "training",
+    "difficulty": "medium",
+    "notes": "Competition peak programming"
+  },
+  {
+    "id": "lq-036",
+    "query": "What is the typical recovery timeline after a grade 2 hamstring strain?",
+    "expected_agent": "rehab",
+    "difficulty": "easy",
+    "notes": "Clear injury recovery question"
+  },
+  {
+    "id": "lq-037",
+    "query": "My lower back hurts after deadlifts. What could be causing this?",
+    "expected_agent": "rehab",
+    "difficulty": "easy",
+    "notes": "Pain/injury question, clearly rehab domain"
+  },
+  {
+    "id": "lq-038",
+    "query": "What are the McGill Big 3 exercises and who should do them?",
+    "expected_agent": "rehab",
+    "difficulty": "easy",
+    "notes": "Specific rehab exercise protocol in corpus"
+  },
+  {
+    "id": "lq-039",
+    "query": "How do I differentiate between DOMS and an actual muscle injury?",
+    "expected_agent": "rehab",
+    "difficulty": "medium",
+    "notes": "Injury vs soreness differentiation"
+  },
+  {
+    "id": "lq-040",
+    "query": "What is patellar tendinopathy and how is it treated?",
+    "expected_agent": "rehab",
+    "difficulty": "easy",
+    "notes": "Clear injury/condition question"
+  },
+  {
+    "id": "lq-041",
+    "query": "How long does an ACL reconstruction surgery recovery typically take before returning to sport?",
+    "expected_agent": "rehab",
+    "difficulty": "easy",
+    "notes": "Post-surgical recovery timeline"
+  },
+  {
+    "id": "lq-042",
+    "query": "What is the difference between a sprain and a strain?",
+    "expected_agent": "rehab",
+    "difficulty": "easy",
+    "notes": "Basic injury classification"
+  },
+  {
+    "id": "lq-043",
+    "query": "My shoulder clicks and pops when I press overhead. Should I be worried?",
+    "expected_agent": "rehab",
+    "difficulty": "easy",
+    "notes": "Symptom description, rehab domain"
+  },
+  {
+    "id": "lq-044",
+    "query": "What exercises can help rehabilitate a rotator cuff injury?",
+    "expected_agent": "rehab",
+    "difficulty": "easy",
+    "notes": "Specific injury rehabilitation"
+  },
+  {
+    "id": "lq-045",
+    "query": "How do I manage hip impingement while continuing to squat?",
+    "expected_agent": "rehab",
+    "difficulty": "medium",
+    "notes": "Managing training around injury, rehab framing"
+  },
+  {
+    "id": "lq-046",
+    "query": "What is the Rebuilding Milo approach to injury assessment?",
+    "expected_agent": "rehab",
+    "difficulty": "easy",
+    "notes": "Direct corpus book reference (Rebuilding Milo is in the test corpus)"
+  },
+  {
+    "id": "lq-047",
+    "query": "What are the warning signs that I need to stop training and see a doctor?",
+    "expected_agent": "rehab",
+    "difficulty": "medium",
+    "notes": "Clinical decision-making, rehab domain"
+  },
+  {
+    "id": "lq-048",
+    "query": "What is a herniated disc and what exercises are safe with this condition?",
+    "expected_agent": "rehab",
+    "difficulty": "medium",
+    "notes": "Injury + safe exercise modification"
+  },
+  {
+    "id": "lq-049",
+    "query": "How do I do a reverse Nordic hamstring curl for injury prevention?",
+    "expected_agent": "rehab",
+    "difficulty": "medium",
+    "notes": "Prehab exercise"
+  },
+  {
+    "id": "lq-050",
+    "query": "I have knee pain when going down stairs. What is the likely cause?",
+    "expected_agent": "rehab",
+    "difficulty": "easy",
+    "notes": "Symptom-based diagnosis, rehab domain"
+  },
+  {
+    "id": "lq-051",
+    "query": "What is the difference between acute and chronic injury management?",
+    "expected_agent": "rehab",
+    "difficulty": "medium",
+    "notes": "Injury management framework"
+  },
+  {
+    "id": "lq-052",
+    "query": "How do I return to squatting after lower back pain?",
+    "expected_agent": "rehab",
+    "difficulty": "medium",
+    "notes": "Return-to-sport protocol"
+  },
+  {
+    "id": "lq-053",
+    "query": "What is piriformis syndrome and how is it treated?",
+    "expected_agent": "rehab",
+    "difficulty": "easy",
+    "notes": "Specific condition, rehab domain"
+  },
+  {
+    "id": "lq-054",
+    "query": "My wrist hurts when I bench press. What modifications can I make?",
+    "expected_agent": "rehab",
+    "difficulty": "easy",
+    "notes": "Injury-triggered movement modification"
+  },
+  {
+    "id": "lq-055",
+    "query": "What is thoracic spine mobility and why is it important for overhead pressing?",
+    "expected_agent": "rehab",
+    "difficulty": "medium",
+    "notes": "Mobility/joint health, rehab domain framing"
+  },
+  {
+    "id": "lq-056",
+    "query": "How do I screen for femoroacetabular impingement?",
+    "expected_agent": "rehab",
+    "difficulty": "hard",
+    "notes": "Clinical screening, rehab domain"
+  },
+  {
+    "id": "lq-057",
+    "query": "What is the PRICE protocol for acute soft tissue injuries?",
+    "expected_agent": "rehab",
+    "difficulty": "easy",
+    "notes": "First-aid/acute injury management"
+  },
+  {
+    "id": "lq-058",
+    "query": "My Achilles tendon is very stiff in the morning. What does this indicate?",
+    "expected_agent": "rehab",
+    "difficulty": "easy",
+    "notes": "Symptom description, tendon health"
+  },
+  {
+    "id": "lq-059",
+    "query": "How does the nervous system contribute to pain perception after injury?",
+    "expected_agent": "rehab",
+    "difficulty": "hard",
+    "notes": "Pain science, rehab domain"
+  },
+  {
+    "id": "lq-060",
+    "query": "What movement compensations are common after a hip labral tear?",
+    "expected_agent": "rehab",
+    "difficulty": "hard",
+    "notes": "Clinical biomechanics, rehab domain"
+  },
+  {
+    "id": "lq-061",
+    "query": "What is the recommended daily protein intake for a strength athlete?",
+    "expected_agent": "nutrition",
+    "difficulty": "easy",
+    "notes": "Classic nutrition question"
+  },
+  {
+    "id": "lq-062",
+    "query": "Is creatine monohydrate safe and effective for strength training?",
+    "expected_agent": "nutrition",
+    "difficulty": "easy",
+    "notes": "Supplement question, nutrition domain"
+  },
+  {
+    "id": "lq-063",
+    "query": "What should I eat before a heavy training session?",
+    "expected_agent": "nutrition",
+    "difficulty": "easy",
+    "notes": "Pre-workout nutrition"
+  },
+  {
+    "id": "lq-064",
+    "query": "How many grams of carbohydrate do I need per kilogram of bodyweight for endurance sports?",
+    "expected_agent": "nutrition",
+    "difficulty": "easy",
+    "notes": "Macronutrient dosing"
+  },
+  {
+    "id": "lq-065",
+    "query": "What is the anabolic window and does post-workout protein timing matter?",
+    "expected_agent": "nutrition",
+    "difficulty": "medium",
+    "notes": "Protein timing question"
+  },
+  {
+    "id": "lq-066",
+    "query": "Does the ketogenic diet impair strength performance?",
+    "expected_agent": "nutrition",
+    "difficulty": "medium",
+    "notes": "Diet strategy and performance"
+  },
+  {
+    "id": "lq-067",
+    "query": "What is the difference between whey protein and casein protein?",
+    "expected_agent": "nutrition",
+    "difficulty": "easy",
+    "notes": "Supplement comparison"
+  },
+  {
+    "id": "lq-068",
+    "query": "How much fat should a powerlifter eat during a strength block?",
+    "expected_agent": "nutrition",
+    "difficulty": "medium",
+    "notes": "Macronutrient planning"
+  },
+  {
+    "id": "lq-069",
+    "query": "What foods are best for muscle recovery after training?",
+    "expected_agent": "nutrition",
+    "difficulty": "easy",
+    "notes": "Post-workout nutrition"
+  },
+  {
+    "id": "lq-070",
+    "query": "Should I bulk or cut first if I am a beginner?",
+    "expected_agent": "nutrition",
+    "difficulty": "medium",
+    "notes": "Body composition strategy"
+  },
+  {
+    "id": "lq-071",
+    "query": "What is leucine's role in muscle protein synthesis?",
+    "expected_agent": "nutrition",
+    "difficulty": "hard",
+    "notes": "Amino acid biochemistry, nutrition domain"
+  },
+  {
+    "id": "lq-072",
+    "query": "How does caffeine affect strength training performance?",
+    "expected_agent": "nutrition",
+    "difficulty": "medium",
+    "notes": "Ergogenic aid, nutrition/supplement domain"
+  },
+  {
+    "id": "lq-073",
+    "query": "What is the difference between a caloric surplus and a lean bulk?",
+    "expected_agent": "nutrition",
+    "difficulty": "medium",
+    "notes": "Bulking strategy"
+  },
+  {
+    "id": "lq-074",
+    "query": "How do I calculate my total daily energy expenditure?",
+    "expected_agent": "nutrition",
+    "difficulty": "medium",
+    "notes": "Energy balance calculation"
+  },
+  {
+    "id": "lq-075",
+    "query": "What are branched-chain amino acids and are they worth taking?",
+    "expected_agent": "nutrition",
+    "difficulty": "easy",
+    "notes": "Supplement efficacy question"
+  },
+  {
+    "id": "lq-076",
+    "query": "How much water should I drink during a training session?",
+    "expected_agent": "nutrition",
+    "difficulty": "easy",
+    "notes": "Hydration, nutrition domain"
+  },
+  {
+    "id": "lq-077",
+    "query": "What is the glycemic index and does it matter for athletes?",
+    "expected_agent": "nutrition",
+    "difficulty": "medium",
+    "notes": "Carbohydrate quality"
+  },
+  {
+    "id": "lq-078",
+    "query": "How does protein distribution across meals affect muscle building?",
+    "expected_agent": "nutrition",
+    "difficulty": "hard",
+    "notes": "Meal frequency and protein distribution"
+  },
+  {
+    "id": "lq-079",
+    "query": "Is intermittent fasting compatible with building strength?",
+    "expected_agent": "nutrition",
+    "difficulty": "medium",
+    "notes": "Eating pattern strategy"
+  },
+  {
+    "id": "lq-080",
+    "query": "What does the research say about omega-3 supplementation for athletes?",
+    "expected_agent": "nutrition",
+    "difficulty": "medium",
+    "notes": "Evidence-based supplement question"
+  },
+  {
+    "id": "lq-081",
+    "query": "How many calories should I eat to maintain muscle while losing fat?",
+    "expected_agent": "nutrition",
+    "difficulty": "medium",
+    "notes": "Body recomposition nutrition"
+  },
+  {
+    "id": "lq-082",
+    "query": "What is the role of carbohydrates in fueling a strength training session?",
+    "expected_agent": "nutrition",
+    "difficulty": "easy",
+    "notes": "Macronutrient role in training"
+  },
+  {
+    "id": "lq-083",
+    "query": "How do electrolytes affect performance and when should I supplement them?",
+    "expected_agent": "nutrition",
+    "difficulty": "medium",
+    "notes": "Hydration and electrolyte balance"
+  },
+  {
+    "id": "lq-084",
+    "query": "What protein sources are best for plant-based athletes?",
+    "expected_agent": "nutrition",
+    "difficulty": "medium",
+    "notes": "Diet type and protein sourcing"
+  },
+  {
+    "id": "lq-085",
+    "query": "Does meal timing around training significantly impact hypertrophy?",
+    "expected_agent": "nutrition",
+    "difficulty": "medium",
+    "notes": "Nutrient timing"
+  },
+  {
+    "id": "lq-086",
+    "query": "What squat variation is best for someone with femoral anteversion?",
+    "expected_agent": "rehab",
+    "difficulty": "hard",
+    "notes": "Anatomical variant affecting exercise selection; rehab framing"
+  },
+  {
+    "id": "lq-087",
+    "query": "I feel a sharp pinch in my hip at the bottom of the squat. What should I do?",
+    "expected_agent": "rehab",
+    "difficulty": "easy",
+    "notes": "Symptom during exercise, clear rehab domain"
+  },
+  {
+    "id": "lq-088",
+    "query": "How do I progressively overload without getting injured as a beginner?",
+    "expected_agent": "training",
+    "difficulty": "medium",
+    "notes": "Load management — framed as a training strategy question, not an injury question"
+  },
+  {
+    "id": "lq-089",
+    "query": "What is the evidence for foam rolling before training?",
+    "expected_agent": "rehab",
+    "difficulty": "medium",
+    "notes": "Soft tissue mobilization, rehab/recovery domain"
+  },
+  {
+    "id": "lq-090",
+    "query": "How should I track my calories when eating out frequently?",
+    "expected_agent": "nutrition",
+    "difficulty": "medium",
+    "notes": "Practical nutrition tracking"
+  },
+  {
+    "id": "lq-091",
+    "query": "What is the minimum effective volume for maintaining strength during a diet?",
+    "expected_agent": "training",
+    "difficulty": "hard",
+    "notes": "Volume management during cut — programming question, not nutrition"
+  },
+  {
+    "id": "lq-092",
+    "query": "How do I know if my hip flexors are tight or if I have an underlying hip issue?",
+    "expected_agent": "rehab",
+    "difficulty": "medium",
+    "notes": "Differential assessment, rehab domain"
+  },
+  {
+    "id": "lq-093",
+    "query": "What is the scientific principle of overload and how does it apply to programming?",
+    "expected_agent": "training",
+    "difficulty": "medium",
+    "notes": "Training theory and programming"
+  },
+  {
+    "id": "lq-094",
+    "query": "How does sleep affect strength gains and recovery?",
+    "expected_agent": "training",
+    "difficulty": "medium",
+    "notes": "Recovery as it relates to training outcomes; framed as a training question"
+  },
+  {
+    "id": "lq-095",
+    "query": "What is a maintenance calorie intake and how do I find mine?",
+    "expected_agent": "nutrition",
+    "difficulty": "easy",
+    "notes": "Energy balance basics"
+  },
+  {
+    "id": "lq-096",
+    "query": "Why does my knee cave inward during squats and how do I fix it?",
+    "expected_agent": "training",
+    "difficulty": "medium",
+    "notes": "Technique correction — valgus collapse treated as coaching cue, not injury"
+  },
+  {
+    "id": "lq-097",
+    "query": "What is tendinosis versus tendinitis and how does treatment differ?",
+    "expected_agent": "rehab",
+    "difficulty": "hard",
+    "notes": "Clinical distinction, rehab domain"
+  },
+  {
+    "id": "lq-098",
+    "query": "How much protein is too much — can excess protein be harmful?",
+    "expected_agent": "nutrition",
+    "difficulty": "medium",
+    "notes": "Protein safety and upper limits"
+  },
+  {
+    "id": "lq-099",
+    "query": "What is the sticking point in the bench press and how do I train through it?",
+    "expected_agent": "training",
+    "difficulty": "medium",
+    "notes": "Technique and strength curve question"
+  },
+  {
+    "id": "lq-100",
+    "query": "What is graded exposure therapy in the context of pain and movement?",
+    "expected_agent": "rehab",
+    "difficulty": "hard",
+    "notes": "Pain rehab framework"
+  },
+  {
+    "id": "lq-101",
+    "query": "How do I choose between a high-frequency and low-frequency training split?",
+    "expected_agent": "training",
+    "difficulty": "medium",
+    "notes": "Programming structure question"
+  },
+  {
+    "id": "lq-102",
+    "query": "What is passive versus active recovery and when should I use each?",
+    "expected_agent": "training",
+    "difficulty": "medium",
+    "notes": "Recovery strategy within a training plan"
+  },
+  {
+    "id": "lq-103",
+    "query": "Is beta-alanine effective for strength training or only endurance?",
+    "expected_agent": "nutrition",
+    "difficulty": "medium",
+    "notes": "Sport-specific supplement efficacy"
+  },
+  {
+    "id": "lq-104",
+    "query": "How do I modify the Romanian deadlift to protect a previous lumbar injury?",
+    "expected_agent": "rehab",
+    "difficulty": "medium",
+    "notes": "Injury-driven exercise modification"
+  },
+  {
+    "id": "lq-105",
+    "query": "What is the role of zinc and magnesium in athletic recovery?",
+    "expected_agent": "nutrition",
+    "difficulty": "medium",
+    "notes": "Micronutrient supplementation"
+  },
+  {
+    "id": "lq-cd-001",
+    "query": "I have patellar tendinopathy. What training volume modifications and protein intake should I follow?",
+    "expected_agent": "rehab",
+    "valid_agents": ["rehab", "nutrition"],
+    "category": "cross_domain",
+    "difficulty": "medium",
+    "notes": "Rehab + nutrition. Primary intent is managing the injury; rehab or nutrition both reasonable."
+  },
+  {
+    "id": "lq-cd-002",
+    "query": "How should I program my bench press to work around a mild pec strain?",
+    "expected_agent": "rehab",
+    "valid_agents": ["rehab", "training"],
+    "category": "cross_domain",
+    "difficulty": "medium",
+    "notes": "Training + rehab. Injury context makes rehab primary, but training is also valid."
+  },
+  {
+    "id": "lq-cd-003",
+    "query": "What protein sources best support tendon healing while I continue to squat?",
+    "expected_agent": "nutrition",
+    "valid_agents": ["nutrition", "rehab"],
+    "category": "cross_domain",
+    "difficulty": "medium",
+    "notes": "Explicitly asks about protein (nutrition), context is tendon injury (rehab). Nutrition is primary."
+  },
+  {
+    "id": "lq-cd-004",
+    "query": "I am returning from a hamstring strain. How do I rebuild my deadlift over 8 weeks?",
+    "expected_agent": "rehab",
+    "valid_agents": ["rehab", "training"],
+    "category": "cross_domain",
+    "difficulty": "medium",
+    "notes": "Return-to-sport programming. Rehab or training both reasonable; rehab primary given injury history."
+  },
+  {
+    "id": "lq-cd-005",
+    "query": "Should I eat more carbohydrates on heavy squat days, and does this change if my knees are sore?",
+    "expected_agent": "nutrition",
+    "valid_agents": ["nutrition", "rehab"],
+    "category": "cross_domain",
+    "difficulty": "hard",
+    "notes": "Nutrition (carb timing) + rehab (knee soreness). Primary question is nutritional."
+  },
+  {
+    "id": "lq-cd-006",
+    "query": "How do I periodize training during a fat loss phase without losing strength?",
+    "expected_agent": "training",
+    "valid_agents": ["training", "nutrition"],
+    "category": "cross_domain",
+    "difficulty": "medium",
+    "notes": "Training (periodization) + nutrition (cut). Primary question is programming."
+  },
+  {
+    "id": "lq-cd-007",
+    "query": "I have lower back pain and want to know if creatine can reduce inflammation while I rehab.",
+    "expected_agent": "rehab",
+    "valid_agents": ["rehab", "nutrition"],
+    "category": "cross_domain",
+    "difficulty": "hard",
+    "notes": "Rehab context (back pain) with a nutrition question (creatine). Either agent reasonable."
+  },
+  {
+    "id": "lq-cd-008",
+    "query": "What accessory exercises should I add alongside a higher protein diet to recover from a shoulder injury?",
+    "expected_agent": "rehab",
+    "valid_agents": ["rehab", "nutrition", "training"],
+    "category": "cross_domain",
+    "difficulty": "hard",
+    "notes": "All three domains present. Injury recovery (rehab) is the driving context."
+  },
+  {
+    "id": "lq-cd-009",
+    "query": "How do I stay lean during a competition prep cycle while protecting my joints?",
+    "expected_agent": "nutrition",
+    "valid_agents": ["nutrition", "training", "rehab"],
+    "category": "cross_domain",
+    "difficulty": "hard",
+    "notes": "Nutrition (stay lean), training (competition prep), rehab (joint protection). Nutrition is primary goal."
+  },
+  {
+    "id": "lq-cd-010",
+    "query": "Can I do Starting Strength while eating at a caloric deficit?",
+    "expected_agent": "training",
+    "valid_agents": ["training", "nutrition"],
+    "category": "cross_domain",
+    "difficulty": "medium",
+    "notes": "Training program + nutrition strategy. Primary question is about the training program."
+  },
+  {
+    "id": "lq-cd-011",
+    "query": "I injured my ACL 6 months ago. What strength training can I do and how much should I eat to preserve muscle?",
+    "expected_agent": "rehab",
+    "valid_agents": ["rehab", "training", "nutrition"],
+    "category": "cross_domain",
+    "difficulty": "hard",
+    "notes": "All three domains. ACL recovery context makes rehab primary."
+  },
+  {
+    "id": "lq-cd-012",
+    "query": "Is it safe to use a high-rep program with low rest periods if I have mild knee pain?",
+    "expected_agent": "rehab",
+    "valid_agents": ["rehab", "training"],
+    "category": "cross_domain",
+    "difficulty": "medium",
+    "notes": "Training modality + injury concern. Pain context makes rehab primary."
+  },
+  {
+    "id": "lq-cd-013",
+    "query": "What rep range and what protein intake should a beginner lifter use to build muscle quickly?",
+    "expected_agent": "training",
+    "valid_agents": ["training", "nutrition"],
+    "category": "cross_domain",
+    "difficulty": "easy",
+    "notes": "Training (rep range) + nutrition (protein). Both are equally primary; training listed first."
+  },
+  {
+    "id": "lq-cd-014",
+    "query": "How does eating too little affect my ability to recover from training-related muscle damage?",
+    "expected_agent": "nutrition",
+    "valid_agents": ["nutrition", "training"],
+    "category": "cross_domain",
+    "difficulty": "medium",
+    "notes": "Nutrition (caloric deficit) + training recovery context. Nutritional cause is the primary focus."
+  },
+  {
+    "id": "lq-cd-015",
+    "query": "I am a powerlifter with a history of lower back issues. How do I peak safely for a meet?",
+    "expected_agent": "training",
+    "valid_agents": ["training", "rehab"],
+    "category": "cross_domain",
+    "difficulty": "hard",
+    "notes": "Competition prep (training) with injury history (rehab). Primary goal is the competition peak."
+  },
+  {
+    "id": "adv-012",
+    "query": "What's the best way to structure my week?",
+    "expected_agent": "training",
+    "category": "adversarial",
+    "difficulty": "hard",
+    "notes": "From Layer 1 adversarial bank. Extremely vague — 'structure my week' could mean anything, but in a fitness context should route to training programming."
+  },
+  {
+    "id": "adv-017",
+    "query": "For an intermediate lifter with no injuries, what does the research say about protein timing around workouts versus total daily intake for maximizing hypertrophy?",
+    "expected_agent": "nutrition",
+    "category": "adversarial",
+    "difficulty": "hard",
+    "notes": "From Layer 1 adversarial bank. Vague opener 'what does the research say' — clearly nutrition domain once parsed."
+  },
+  {
+    "id": "adv-019",
+    "query": "What's the difference between a strain and a sprain, and when should I see a doctor versus just applying the RICE method?",
+    "expected_agent": "rehab",
+    "category": "adversarial",
+    "difficulty": "hard",
+    "notes": "From Layer 1 adversarial bank. Sits at boundary of general medical advice and rehab. Tests whether router avoids over-generalising."
+  },
+  {
+    "id": "adv-025",
+    "query": "I'm terrified. I tried a new deadlift cue from a YouTube video and now my lower back is in sharp, shooting pain every time I bend over. I have a competition in a month. What do I do?",
+    "expected_agent": "rehab",
+    "category": "adversarial",
+    "difficulty": "hard",
+    "notes": "From Layer 1 adversarial bank. Emotionally framed acute injury query. Tests router's ability to cut through urgency and classify correctly."
+  },
+  {
+    "id": "adv-028",
+    "query": "My friend swears by the keto diet for endurance athletes, citing Dr. Tim Noakes. What does the sports nutrition textbook say about ketogenic diets for athletic performance?",
+    "expected_agent": "nutrition",
+    "category": "adversarial",
+    "difficulty": "hard",
+    "notes": "From Layer 1 adversarial bank. References out-of-corpus author (Noakes), but core query is answerable from nutrition corpus."
+  },
+  {
+    "id": "adv-033",
+    "query": "Starrett 在 'Becoming a Supple Leopard' 里提到的 '关节囊复位' 具体怎么做？My shoulder clicks during bench press. 这个技术能帮到我吗？还是我需要看医生？",
+    "expected_agent": "rehab",
+    "category": "adversarial",
+    "difficulty": "hard",
+    "notes": "From Layer 1 adversarial bank. Mixed Chinese/English, references in-corpus author (Starrett). Tests multilingual routing."
+  },
+  {
+    "id": "adv-036",
+    "query": "Dr. Horschig 在 'Rebuilding Milo' 中对髌股疼痛综合征的康复，和传统物理疗法有什么主要区别？他的方法更强调什么？请用中文解释关键点。",
+    "expected_agent": "rehab",
+    "category": "adversarial",
+    "difficulty": "hard",
+    "notes": "From Layer 1 adversarial bank. Chinese-dominant query referencing in-corpus author and book. Tests corpus-anchored routing."
+  },
+  {
+    "id": "adv-037",
+    "query": "My friend says I should 'eat like a lion' based on some paleo book, but my sports nutrition textbook emphasizes carb timing. 谁是对的？For my 5am training sessions, what should I eat?",
+    "expected_agent": "nutrition",
+    "category": "adversarial",
+    "difficulty": "hard",
+    "notes": "From Layer 1 adversarial bank. Mixed language, out-of-corpus diet reference vs in-corpus sports nutrition."
+  },
+  {
+    "id": "adv-039",
+    "query": "I'm trying to fix my 'butt wink' at the bottom of the squat. Starrett's book talks about hip capsule mobility, but I don't understand the exercises. Can you explain the 'couch stretch' and how it helps? 另外，如果我的脚踝活动度也很差，应该先解决哪个？",
+    "expected_agent": "rehab",
+    "category": "adversarial",
+    "difficulty": "hard",
+    "notes": "From Layer 1 adversarial bank. Mixed language, rehab technique question from in-corpus author."
+  }
+]
