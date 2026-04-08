@@ -102,10 +102,13 @@ fi
 if [[ "$LAYERS" == "all" ]] && [ -d "e2e/tests" ]; then
   echo ""
   echo "[Layer 5] Playwright E2E Tests..."
-  npx playwright test e2e/tests/ \
-    --reporter=html \
-    --output "$REPORT_DIR/e2e_${TIMESTAMP}/" \
-    || OVERALL_EXIT=1
+  (
+    cd e2e
+    npm install --silent 2>/dev/null || true
+    npx playwright test \
+      --config=playwright.config.ts \
+      || exit 1
+  ) || OVERALL_EXIT=1
 fi
 
 # ---------------------------------------------------------------------------

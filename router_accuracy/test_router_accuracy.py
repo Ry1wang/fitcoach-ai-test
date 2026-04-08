@@ -503,3 +503,193 @@ class TestDifficultyBreakdown:
                 f"Easy-query accuracy {accuracy:.1%} is unexpectedly low "
                 f"(floor 70%) — even simple queries are being misrouted."
             )
+
+
+# ---------------------------------------------------------------------------
+# Layer 1 × Layer 3 — Adversarial query routing accuracy
+# ---------------------------------------------------------------------------
+
+ADVERSARIAL_ACCURACY_THRESHOLD = 0.80   # 10 pp below clean-set target (90%)
+ADV_DATA_PATH = Path(__file__).parent.parent / "ai_generated" / "adversarial_queries.json"
+
+
+@pytest.fixture(scope="module")
+def adversarial_routing_results(authed_client) -> list[dict]:
+    """
+    Run every *answerable* adversarial query through the live API and collect
+    routing outcomes.
+
+    Only queries with answerability == "answerable" are tested for agent
+    assignment — unanswerable / out-of-corpus entries are excluded from
+    accuracy measurement (but checked separately for 5xx safety).
+
+    Module-scoped so the full set is executed once regardless of how many
+    test functions consume it.
+    """
+    if not ADV_DATA_PATH.exists():
+        pytest.skip("adversarial_queries.json not found — run generate_cases.py first.")
+
+    with open(ADV_DATA_PATH, encoding="utf-8") as f:
+        queries = json.load(f)
+
+    INTER_QUERY_DELAY = float(__import__("os").getenv("L3_QUERY_DELAY", "1.0"))
+
+    results = []
+    for i, item in enumerate(queries):
+        if i > 0:
+            time.sleep(INTER_QUERY_DELAY)
+
+        try:
+            with authed_client.stream(
+                "POST", "/chat", json={"message": item["query"]}
+            ) as resp:
+                http_status = resp.status_code
+                agent_used = ""
+                answer_tokens: list[str] = []
+                if http_status == 200:
+                    for line in resp.iter_lines():
+                        if not line.startswith("data:"):
+                            continue
+                        payload = line[len("data:"):].strip()
+                        if not payload:
+                            continue
+                        try:
+                            event = __import__("json").loads(payload)
+                        except Exception:
+                            continue
+                        if event.get("type") == "token":
+                            answer_tokens.append(event.get("content", ""))
+                        elif event.get("type") == "done":
+                            agent_used = event.get("agent_used", "")
+        except Exception as exc:
+            http_status = None
+            agent_used = ""
+            answer_tokens = []
+
+        results.append({
+            **item,
+            "http_status": http_status,
+            "actual_agent": agent_used,
+            "answer_length": len("".join(answer_tokens)),
+        })
+
+    return results
+
+
+@pytest.mark.layer3
+@pytest.mark.requires_corpus
+@pytest.mark.slow
+class TestAdversarialRouting:
+    """
+    Route adversarial queries through the live API and measure accuracy against
+    the expected_agents labels in adversarial_queries.json.
+
+    Target: ≥ 80% accuracy on answerable adversarial queries.
+    This is intentionally 10 pp below the clean-set target (90%) to account
+    for deliberate ambiguity in the adversarial set.
+    """
+
+    def test_adversarial_no_server_errors(self, adversarial_routing_results):
+        """Every adversarial query must return HTTP 200 — no unhandled 5xx."""
+        failures = [
+            r for r in adversarial_routing_results
+            if r["http_status"] not in (200, None)
+            and r["http_status"] >= 500
+        ]
+        assert not failures, (
+            f"{len(failures)} adversarial queries caused server errors:\n"
+            + "\n".join(
+                f"  [{r['id']}] HTTP {r['http_status']}  cat={r['category']}  "
+                f"q={r['query'][:60]}"
+                for r in failures
+            )
+        )
+
+    def test_adversarial_answerable_returns_content(self, adversarial_routing_results):
+        """Every answerable adversarial query must produce a non-empty answer."""
+        answerable = [
+            r for r in adversarial_routing_results
+            if r.get("answerability") == "answerable"
+        ]
+        empty = [r for r in answerable if r["answer_length"] == 0]
+        assert not empty, (
+            f"{len(empty)} answerable adversarial queries returned empty answers:\n"
+            + "\n".join(f"  [{r['id']}] {r['query'][:80]}" for r in empty)
+        )
+
+    def test_adversarial_accuracy_meets_threshold(self, adversarial_routing_results):
+        """
+        Routing accuracy on answerable single-expected-agent adversarial queries
+        must be ≥ 80%.
+
+        Multi-agent queries (expected_agents has >1 entry) are excluded because
+        any of the listed agents is an acceptable outcome for ambiguous inputs.
+        """
+        # Single-expected-agent answerable queries only
+        scoreable = [
+            r for r in adversarial_routing_results
+            if r.get("answerability") == "answerable"
+            and len(r.get("expected_agents", [])) == 1
+        ]
+        if not scoreable:
+            pytest.skip("No single-agent answerable adversarial queries found.")
+
+        correct = sum(
+            1 for r in scoreable
+            if r["actual_agent"] == r["expected_agents"][0]
+        )
+        accuracy = correct / len(scoreable)
+
+        print(
+            f"\n[Adversarial] accuracy={accuracy:.1%} ({correct}/{len(scoreable)})  "
+            f"threshold={ADVERSARIAL_ACCURACY_THRESHOLD:.0%}"
+        )
+        assert accuracy >= ADVERSARIAL_ACCURACY_THRESHOLD, (
+            f"Adversarial routing accuracy {accuracy:.1%} < "
+            f"threshold {ADVERSARIAL_ACCURACY_THRESHOLD:.0%}  "
+            f"({correct}/{len(scoreable)} correct)"
+        )
+
+    def test_adversarial_accuracy_by_category(self, adversarial_routing_results):
+        """
+        Print per-category routing accuracy for diagnostics.
+        No hard threshold — purely observational, surfaces which categories
+        degrade most.
+        """
+        from collections import defaultdict
+        by_cat: dict[str, list] = defaultdict(list)
+        for r in adversarial_routing_results:
+            if (
+                r.get("answerability") == "answerable"
+                and len(r.get("expected_agents", [])) == 1
+            ):
+                by_cat[r["category"]].append(
+                    r["actual_agent"] == r["expected_agents"][0]
+                )
+
+        print("\n[Adversarial] per-category accuracy:")
+        for cat in sorted(by_cat):
+            items = by_cat[cat]
+            acc = sum(items) / len(items) if items else 0.0
+            print(f"  {cat:<20s} {acc:.0%}  ({sum(items)}/{len(items)})")
+
+    def test_cross_domain_adversarial_no_crash(self, adversarial_routing_results):
+        """
+        Cross-domain adversarial queries must always return HTTP 200.
+        These are the highest-risk category for unhandled routing exceptions.
+        """
+        cross = [
+            r for r in adversarial_routing_results
+            if r.get("category") == "cross_domain"
+        ]
+        if not cross:
+            pytest.skip("No cross_domain adversarial queries in dataset.")
+
+        crashed = [r for r in cross if r["http_status"] != 200]
+        assert not crashed, (
+            f"{len(crashed)} cross_domain queries did not return 200:\n"
+            + "\n".join(
+                f"  [{r['id']}] HTTP {r['http_status']}  {r['query'][:60]}"
+                for r in crashed
+            )
+        )
